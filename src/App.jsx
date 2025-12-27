@@ -7,8 +7,9 @@ import Import from "./pages/Import";
 
 function App() {
   return (
-    <div className="flex min-h-screen gap-x-20">
+    <div className="flex">
       <Navbar />
+
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/transactions" element={<Transactions />} />
