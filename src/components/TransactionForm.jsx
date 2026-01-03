@@ -3,6 +3,18 @@ import { useState } from "react";
 const TransactionForm = () => {
   const [selected, setSelected] = useState("expense");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [transactionData, setTransactionData] = useState({
+    type: "expense",
+    amount: "",
+    description: "",
+    category: "groceries",
+    date: new Date().toISOString().split("T")[0],
+  });
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+  }
 
   return (
     <>
@@ -37,6 +49,10 @@ const TransactionForm = () => {
             type="number"
             placeholder="0.00"
             className="bg-gray-600 text-white p-2 rounded mt-1"
+            onChange={(e) =>
+              setTransactionData({ ...transactionData, amount: e.target.value })
+            }
+            value={transactionData.amount}
           />
         </div>
         <div className="flex flex-col">
@@ -45,11 +61,27 @@ const TransactionForm = () => {
             type="text"
             placeholder="e.g., Starbucks coffee"
             className="bg-gray-600 text-white p-2 rounded mt-1"
+            onChange={(e) =>
+              setTransactionData({
+                ...transactionData,
+                description: e.target.value,
+              })
+            }
+            value={transactionData.description}
           />
         </div>
         <div className="flex flex-col">
           <label>Category</label>
-          <select className="bg-gray-600 text-white p-2 rounded mt-1">
+          <select
+            className="bg-gray-600 text-white p-2 rounded mt-1"
+            onChange={(e) =>
+              setTransactionData({
+                ...transactionData,
+                category: e.target.value,
+              })
+            }
+            value={transactionData.category}
+          >
             <option value="groceries">Groceries</option>
             <option value="transportation">Transportation</option>
             <option value="entertainment">Entertainment</option>
@@ -65,8 +97,10 @@ const TransactionForm = () => {
 
           <input
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={transactionData.date}
+            onChange={(e) =>
+              setTransactionData({ ...transactionData, date: e.target.value })
+            }
             className="bg-gray-600 text-white p-2 rounded mt-1"
           />
         </div>
