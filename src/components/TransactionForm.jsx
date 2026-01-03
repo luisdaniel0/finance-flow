@@ -16,7 +16,7 @@ const TransactionForm = () => {
 
     if (!transactionData.amount) {
       newErrors.amount = "Amount is required";
-    } else if (parseFloat.amount <= 0) {
+    } else if (parseFloat(transactionData.amount) <= 0) {
       newErrors.amount = "Amount must be greater than 0";
     }
 
@@ -90,9 +90,16 @@ const TransactionForm = () => {
             type="number"
             placeholder="0.00"
             className="bg-gray-600 text-white p-2 rounded mt-1"
-            onChange={(e) =>
-              setTransactionData({ ...transactionData, amount: e.target.value })
-            }
+            onChange={(e) => {
+              setTransactionData({
+                ...transactionData,
+                amount: e.target.value,
+              });
+              // Clear the error for this field when user types
+              if (errors.amount) {
+                setErrors({ ...errors, amount: undefined });
+              }
+            }}
             value={transactionData.amount}
           />
           {errors.amount && (
@@ -106,12 +113,16 @@ const TransactionForm = () => {
             type="text"
             placeholder="e.g., Starbucks coffee"
             className="bg-gray-600 text-white p-2 rounded mt-1"
-            onChange={(e) =>
+            onChange={(e) => {
               setTransactionData({
                 ...transactionData,
                 description: e.target.value,
-              })
-            }
+              });
+              // Clear the error for this field when user types
+              if (errors.description) {
+                setErrors({ ...errors, description: undefined });
+              }
+            }}
             value={transactionData.description}
           />
           {errors.description && (
