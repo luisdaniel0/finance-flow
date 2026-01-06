@@ -11,6 +11,27 @@ const TransactionForm = () => {
   const [transactionList, setTransactionList] = useState([]);
   const [errors, setErrors] = useState({});
 
+  const expenseCategory = [
+    "Groceries",
+    "Transportation",
+    "Dining",
+    "Bills",
+    "Shopping",
+    "Healthcare",
+    "Other",
+  ];
+
+  const incomeCategory = [
+    "Salary",
+    "Freelance",
+    "Business",
+    "Investment",
+    "Gift",
+    "Bonus",
+    "Refund",
+    "Other",
+  ];
+
   function validateForm() {
     const newErrors = {};
 
@@ -64,7 +85,11 @@ const TransactionForm = () => {
             }`}
             type="button"
             onClick={() =>
-              setTransactionData({ ...transactionData, type: "expense" })
+              setTransactionData({
+                ...transactionData,
+                type: "expense",
+                category: "groceries",
+              })
             }
           >
             Expense
@@ -77,7 +102,11 @@ const TransactionForm = () => {
             }`}
             type="button"
             onClick={() =>
-              setTransactionData({ ...transactionData, type: "income" })
+              setTransactionData({
+                ...transactionData,
+                type: "income",
+                category: "salary",
+              })
             }
           >
             Income
@@ -144,14 +173,17 @@ const TransactionForm = () => {
             }
             value={transactionData.category}
           >
-            <option value="groceries">Groceries</option>
-            <option value="transportation">Transportation</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="dining">Dining</option>
-            <option value="shopping">Shopping</option>
-            <option value="bills">Bills</option>
-            <option value="healthcare">Healthcare</option>
-            <option value="other">Other</option>
+            {transactionData.type === "expense"
+              ? expenseCategory.map((cat) => (
+                  <option key={cat} value={cat.toLowerCase()}>
+                    {cat}
+                  </option>
+                ))
+              : incomeCategory.map((cat) => (
+                  <option key={cat} value={cat.toLowerCase()}>
+                    {cat}
+                  </option>
+                ))}
           </select>
         </div>
         <div className="flex flex-col">
