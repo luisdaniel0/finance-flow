@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TransactionForm = () => {
+const TransactionForm = ({ transactionList, setTransactionList }) => {
   const [transactionData, setTransactionData] = useState({
     type: "expense",
     amount: "",
@@ -8,7 +8,7 @@ const TransactionForm = () => {
     category: "groceries",
     date: new Date().toISOString().split("T")[0],
   });
-  const [transactionList, setTransactionList] = useState([]);
+
   const [errors, setErrors] = useState({});
 
   const expenseCategory = [
@@ -118,7 +118,7 @@ const TransactionForm = () => {
             name="amount"
             type="number"
             placeholder="0.00"
-            className="bg-gray-600 text-white p-2 rounded mt-1"
+            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
             onChange={(e) => {
               setTransactionData({
                 ...transactionData,
@@ -141,7 +141,7 @@ const TransactionForm = () => {
             name="description"
             type="text"
             placeholder="e.g., Starbucks coffee"
-            className="bg-gray-600 text-white p-2 rounded mt-1"
+            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
             onChange={(e) => {
               setTransactionData({
                 ...transactionData,
@@ -163,7 +163,7 @@ const TransactionForm = () => {
         <div className="flex flex-col">
           <label>Category</label>
           <select
-            className="bg-gray-600 text-white p-2 rounded mt-1"
+            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
             name="category"
             onChange={(e) =>
               setTransactionData({
@@ -196,7 +196,7 @@ const TransactionForm = () => {
             onChange={(e) =>
               setTransactionData({ ...transactionData, date: e.target.value })
             }
-            className="bg-gray-600 text-white p-2 rounded mt-1"
+            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
           />
         </div>
         <button
@@ -206,12 +206,6 @@ const TransactionForm = () => {
           Add Transaction
         </button>
       </form>
-
-      {/* Temporary - just to test */}
-      <div className="mt-8">
-        <h2>Transactions:</h2>
-        <pre>{JSON.stringify(transactionList, null, 2)}</pre>
-      </div>
     </>
   );
 };
