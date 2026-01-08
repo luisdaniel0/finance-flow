@@ -21,12 +21,12 @@ const TransactionList = ({ transactionList }) => {
                 </button>
                 <span
                   className={`font-bold text-xl ml-5 ${
-                    transactionList.type === "income"
-                      ? "text-green-500"
-                      : "text-red-500"
+                    tran.type === "expense" ? "text-red-500" : "text-green-500"
                   }`}
                 >
-                  {tran.amount}
+                  {tran.type === "expense"
+                    ? "-" + new Intl.NumberFormat().format(tran.amount)
+                    : "+" + new Intl.NumberFormat().format(tran.amount)}
                 </span>
               </div>
             </div>
