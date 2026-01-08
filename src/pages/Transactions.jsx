@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 
 const Transactions = () => {
-  const [transactionList, setTransactionList] = useState([]);
+  const [transactionList, setTransactionList] = useState(
+    JSON.parse(localStorage.getItem("transactions")) || []
+  );
+
+  useEffect(() => {
+    localStorage.setItem("transactions", JSON.stringify(transactionList));
+  }, [transactionList]);
 
   function handleDelete(transactionId) {
     setTransactionList(
