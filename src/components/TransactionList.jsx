@@ -1,11 +1,11 @@
 import { Trash2 } from "lucide-react";
 
-const TransactionList = ({ transactionList }) => {
+const TransactionList = ({ transactionList, handleDelete }) => {
   return (
     <>
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
         {transactionList.map((tran) => (
-          <div className="bg-gray-800 p-6 rounded-lg mb-3 group">
+          <div className="bg-gray-800 p-6 rounded-lg mb-3 group" key={tran.id}>
             <div className="flex justify-between items-center ">
               <div className="flex flex-col">
                 <span className="text-xl text-gray-400">
@@ -16,7 +16,10 @@ const TransactionList = ({ transactionList }) => {
               </div>
 
               <div className="items-center">
-                <button className="px-3 py-0 rounded invisible group-hover:visible cursor-pointer">
+                <button
+                  className="px-3 py-0 rounded invisible group-hover:visible cursor-pointer"
+                  onClick={() => handleDelete(tran.id)}
+                >
                   <Trash2 />
                 </button>
                 <span
@@ -25,8 +28,8 @@ const TransactionList = ({ transactionList }) => {
                   }`}
                 >
                   {tran.type === "expense"
-                    ? "-" + new Intl.NumberFormat().format(tran.amount)
-                    : "+" + new Intl.NumberFormat().format(tran.amount)}
+                    ? "-$" + new Intl.NumberFormat().format(tran.amount)
+                    : "+$" + new Intl.NumberFormat().format(tran.amount)}
                 </span>
               </div>
             </div>
