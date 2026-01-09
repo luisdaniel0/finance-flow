@@ -16,12 +16,17 @@ const Transactions = () => {
       transactionList.filter((transaction) => transaction.id !== transactionId)
     );
   }
+
+  function handleCategorize(desc) {
+    console.log(desc);
+  }
   return (
     <div className="w-full p-8 m-8">
       <h1>Transactions</h1>
       <TransactionForm
         transactionList={transactionList}
         setTransactionList={setTransactionList}
+        handleCategorize={handleCategorize}
       />
       <TransactionList
         transactionList={transactionList}

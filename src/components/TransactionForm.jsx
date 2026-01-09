@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-const TransactionForm = ({ transactionList, setTransactionList }) => {
+const TransactionForm = ({
+  transactionList,
+  setTransactionList,
+  handleCategorize,
+}) => {
   const [transactionData, setTransactionData] = useState({
     type: "expense",
     amount: "",
@@ -162,29 +166,37 @@ const TransactionForm = ({ transactionList, setTransactionList }) => {
         </div>
         <div className="flex flex-col">
           <label>Category</label>
-          <select
-            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
-            name="category"
-            onChange={(e) =>
-              setTransactionData({
-                ...transactionData,
-                category: e.target.value,
-              })
-            }
-            value={transactionData.category}
-          >
-            {transactionData.type === "expense"
-              ? expenseCategory.map((cat) => (
-                  <option key={cat} value={cat.toLowerCase()}>
-                    {cat}
-                  </option>
-                ))
-              : incomeCategory.map((cat) => (
-                  <option key={cat} value={cat.toLowerCase()}>
-                    {cat}
-                  </option>
-                ))}
-          </select>
+          <div className="flex">
+            <select
+              className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
+              name="category"
+              onChange={(e) =>
+                setTransactionData({
+                  ...transactionData,
+                  category: e.target.value,
+                })
+              }
+              value={transactionData.category}
+            >
+              {transactionData.type === "expense"
+                ? expenseCategory.map((cat) => (
+                    <option key={cat} value={cat.toLowerCase()}>
+                      {cat}
+                    </option>
+                  ))
+                : incomeCategory.map((cat) => (
+                    <option key={cat} value={cat.toLowerCase()}>
+                      {cat}
+                    </option>
+                  ))}
+            </select>
+            <button
+              className="flex items-center ml-5 border rounded p-2 cursor-pointer"
+              onClick={() => handleCategorize(transactionData.description)}
+            >
+              Auto Categorize
+            </button>
+          </div>
         </div>
         <div className="flex flex-col">
           <label>Date</label>
