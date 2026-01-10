@@ -3,38 +3,14 @@ import { useState } from "react";
 const TransactionForm = ({
   transactionList,
   setTransactionList,
-  handleCategorize,
+  transactionData,
+  setTransactionData,
+  isLoading,
+  handleAutoCategorize,
+  incomeCategory,
+  expenseCategory,
 }) => {
-  const [transactionData, setTransactionData] = useState({
-    type: "expense",
-    amount: "",
-    description: "",
-    category: "groceries",
-    date: new Date().toISOString().split("T")[0],
-  });
-
   const [errors, setErrors] = useState({});
-
-  const expenseCategory = [
-    "Groceries",
-    "Transportation",
-    "Dining",
-    "Bills",
-    "Shopping",
-    "Healthcare",
-    "Other",
-  ];
-
-  const incomeCategory = [
-    "Salary",
-    "Freelance",
-    "Business",
-    "Investment",
-    "Gift",
-    "Bonus",
-    "Refund",
-    "Other",
-  ];
 
   function validateForm() {
     const newErrors = {};
@@ -191,10 +167,13 @@ const TransactionForm = ({
                   ))}
             </select>
             <button
-              className="flex items-center ml-5 border rounded p-2 cursor-pointer"
-              onClick={() => handleCategorize(transactionData.description)}
+              type="button"
+              className={`flex items-center ml-5 border rounded p-2 cursor-pointer ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              onClick={handleAutoCategorize}
             >
-              Auto Categorize
+              {isLoading ? "Categorizing..." : "Auto-categorize"}
             </button>
           </div>
         </div>
