@@ -69,6 +69,7 @@ const Transactions = () => {
       setIsLoading(false);
     }
   }
+  console.log();
 
   function handleDelete(transactionId) {
     setTransactionList(
