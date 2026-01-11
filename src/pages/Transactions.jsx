@@ -12,7 +12,7 @@ const Transactions = () => {
     type: "expense",
     amount: "",
     description: "",
-    category: "groceries",
+    category: "Groceries",
     date: new Date().toISOString().split("T")[0],
   });
 
@@ -44,6 +44,9 @@ const Transactions = () => {
     "Other",
   ];
 
+  const categoryType =
+    transactionData.type === "expense" ? expenseCategory : incomeCategory;
+
   async function handleAutoCategorize() {
     // Prevent rapid clicking
     const now = Date.now();
@@ -59,17 +62,24 @@ const Transactions = () => {
 
     try {
       // Your AI call here
-      await autoCategorizeDescription(
+      const aiCategorize = await autoCategorizeDescription(
         transactionData.description,
-        incomeCategory
+        categoryType
       );
+      console.log("AI CATEGORY: " + aiCategorize);
+      // Just capitalize first letter
+      const cleanCategory = aiCategorize.trim();
+      const capitalized =
+        cleanCategory.charAt(0).toUpperCase() +
+        cleanCategory.slice(1).toLowerCase();
+      setTransactionData({ ...transactionData, category: aiCategorize });
+      return aiCategorize;
     } catch (error) {
       alert("Failed to categorize. Please try again later.", error);
     } finally {
       setIsLoading(false);
     }
   }
-  console.log();
 
   function handleDelete(transactionId) {
     setTransactionList(

@@ -48,7 +48,7 @@ const TransactionForm = ({
       type: "expense",
       amount: "",
       description: "",
-      category: "groceries",
+      category: "Groceries",
       date: new Date().toISOString().split("T")[0],
     });
   }
@@ -156,15 +156,16 @@ const TransactionForm = ({
             >
               {transactionData.type === "expense"
                 ? expenseCategory.map((cat) => (
-                    <option key={cat} value={cat.toLowerCase()}>
+                    <option key={cat} value={cat}>
                       {cat}
                     </option>
                   ))
                 : incomeCategory.map((cat) => (
-                    <option key={cat} value={cat.toLowerCase()}>
+                    <option key={cat} value={cat}>
                       {cat}
                     </option>
                   ))}
+              <option className="hidden">{transactionData.category}</option>
             </select>
             <button
               type="button"

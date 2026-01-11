@@ -6,8 +6,9 @@ const ai = new GoogleGenAI({
 
 export const autoCategorizeDescription = async (desc, category) => {
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: `auto categorize this description based on these categories. Description: ${desc}. Categories: ${category}. Only return the category name you see in the list, nothing else.`,
+    model: "gemini-2.5-flash-lite",
+    contents: `"${desc}" is a description for an expense/income for a finance tracker app, please auto categorize this description based on the categories given to you, only return 
+    that category word with the first letter capitalized, nothing else. the categories are in an array like so: ${category}`,
   });
   console.log(response.text);
   return response.text;
