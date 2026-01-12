@@ -3,7 +3,7 @@ import { LayoutDashboard, CreditCard, PiggyBank, FileUp } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <div className="min-h-screen gap-x-20">
+    <div className="min-h-screen gap-x-20 border-r-1 border-solid border-[#646cff] p4">
       <nav className="flex flex-col gap-y-10 m-5">
         <h2 className="">FINANCE FLOW</h2>
         <div className="flex flex-nowrap gap-2">

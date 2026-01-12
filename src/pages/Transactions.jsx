@@ -3,11 +3,7 @@ import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 import { autoCategorizeDescription } from "../services/apiCall";
 
-const Transactions = () => {
-  const [transactionList, setTransactionList] = useState(
-    JSON.parse(localStorage.getItem("transactions")) || []
-  );
-
+const Transactions = ({ transactionList, setTransactionList }) => {
   const [transactionData, setTransactionData] = useState({
     type: "expense",
     amount: "",
