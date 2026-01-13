@@ -61,17 +61,11 @@ const Transactions = () => {
     setLastCallTime(now);
 
     try {
-      // Your AI call here
       const aiCategorize = await autoCategorizeDescription(
         transactionData.description,
         categoryType
       );
-      console.log("AI CATEGORY: " + aiCategorize);
-      // Just capitalize first letter
-      const cleanCategory = aiCategorize.trim();
-      const capitalized =
-        cleanCategory.charAt(0).toUpperCase() +
-        cleanCategory.slice(1).toLowerCase();
+
       setTransactionData({ ...transactionData, category: aiCategorize });
       return aiCategorize;
     } catch (error) {

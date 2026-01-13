@@ -9,7 +9,8 @@ const TransactionList = ({ transactionList, handleDelete }) => {
             <div className="flex justify-between items-center ">
               <div className="flex flex-col">
                 <span className="text-xl text-gray-400">
-                  {tran.description}
+                  {tran.description.charAt(0).toUpperCase() +
+                    tran.description.slice(1).toLowerCase()}
                 </span>
                 <span className="font-semibold text-white">{tran.date}</span>
                 <span className="text-sm text-gray-500">{tran.category}</span>
