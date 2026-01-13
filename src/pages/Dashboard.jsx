@@ -4,8 +4,29 @@ import { BanknoteArrowDown } from "lucide-react";
 import { WalletCards } from "lucide-react";
 
 const Dashboard = ({ transactionList }) => {
-  const expense = transactionList.filter((tran) => tran.type === "expense");
-  const income = transactionList.filter((tran) => tran.type === "income");
+  const currentDate = new Date();
+  const currentDateMonth = currentDate.getMonth();
+  const currentDateYear = currentDate.getFullYear();
+
+  const expense = transactionList.filter((tran) => {
+    const tranDate = new Date(tran.date);
+
+    return (
+      tran.type === "expense" &&
+      tranDate.getMonth() === currentDateMonth &&
+      tranDate.getFullYear() === currentDateYear
+    );
+  });
+
+  const income = transactionList.filter((tran) => {
+    const tranDate = new Date(tran.date);
+
+    return (
+      tran.type === "income" &&
+      tranDate.getMonth() === currentDateMonth &&
+      tranDate.getFullYear() === currentDateYear
+    );
+  });
 
   function sumOfIncome() {
     const total = income.reduce(
@@ -30,7 +51,11 @@ const Dashboard = ({ transactionList }) => {
   return (
     <div className="w-full p-8 m-8">
       <h1>Dashboard</h1>
-      <div className="mt-4 p-4 grid grid-cols-4 gap-4 ">
+      <p className="mt-5">
+        Here's whats happening with your money this past month. Lets manage your
+        expense
+      </p>
+      <div className="mt-5  grid grid-cols-4 gap-4 ">
         <div className="border-1 p-6 flex justify-between items-center ">
           Balance<br></br>
           {balance}
@@ -45,7 +70,8 @@ const Dashboard = ({ transactionList }) => {
           {totalExpenses} <BanknoteArrowDown />
         </div>
         <div className="border-1 p-6  flex justify-between items-center">
-          Transaction Count<br></br> {transactionList.length} <WalletCards />
+          Transaction Count<br></br> {expense.length + income.length}
+          <WalletCards />
         </div>
       </div>
     </div>
