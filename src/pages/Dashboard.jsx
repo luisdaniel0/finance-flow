@@ -2,6 +2,7 @@ import { PiggyBank } from "lucide-react";
 import { BanknoteArrowUp } from "lucide-react";
 import { BanknoteArrowDown } from "lucide-react";
 import { WalletCards } from "lucide-react";
+import { Cell, Pie, PieChart, Tooltip, Legend } from "recharts";
 
 const Dashboard = ({ transactionList }) => {
   const currentDate = new Date();
@@ -73,6 +74,8 @@ const Dashboard = ({ transactionList }) => {
 
   console.log(chartData);
 
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+
   /*
   [
     ['Dining', 40],
@@ -113,6 +116,32 @@ const Dashboard = ({ transactionList }) => {
           Transaction Count<br></br> {expense.length + income.length}
           <WalletCards />
         </div>
+      </div>
+      <div className="">
+        <h1>Spending by Category</h1>
+        <PieChart width={500} height={500}>
+          <Pie
+            data={chartData}
+            labelLine={false}
+            dataKey={"value"}
+            nameKey={"name"}
+            cx={"50%"}
+            cy={"50%"}
+            outerRadius={150}
+            label={(entry) => {
+              return entry.name;
+            }}
+          >
+            {chartData.map((entry, index) => (
+              <Cell
+                key={`cell-${entry.name}`}
+                fill={COLORS[index % COLORS.length]}
+              />
+            ))}
+          </Pie>
+          <Tooltip />
+          <Legend />
+        </PieChart>
       </div>
     </div>
   );
