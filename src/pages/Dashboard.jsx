@@ -17,6 +17,7 @@ const Dashboard = ({ transactionList }) => {
       tranDate.getFullYear() === currentDateYear
     );
   });
+  console.log(expense);
 
   const income = transactionList.filter((tran) => {
     const tranDate = new Date(tran.date);
@@ -48,6 +49,45 @@ const Dashboard = ({ transactionList }) => {
   const totalExpenses = sumOfExpense();
   const balance = totalIncome - totalExpenses;
 
+  //come back to this and make sure u understand what this reduce method is doing and how it works with objects
+  // Group expenses by category and sum their amounts
+  const categoryTotals = expense.reduce((totals, transaction) => {
+    if (totals[transaction.category]) {
+      // Category exists - add to existing total
+      totals[transaction.category] =
+        totals[transaction.category] + parseFloat(transaction.amount);
+    } else {
+      // Category doesn't exist - create it with this amount
+      totals[transaction.category] = parseFloat(transaction.amount);
+    }
+    return totals;
+  }, {});
+
+  // Convert object to array format for Recharts
+  const chartData = Object.entries(categoryTotals).map(
+    ([category, amount]) => ({
+      name: category,
+      value: amount,
+    })
+  );
+
+  console.log(chartData);
+
+  /*
+  [
+    ['Dining', 40],
+    ['Bills', 1200],
+    ['Other', 100]
+  ]
+  [
+    {
+      name: "Dining", value: "40"
+    },
+    {
+      name: "Bills", value: 1200
+    }
+  ]
+  */
   return (
     <div className="w-full p-8 m-8">
       <h1>Dashboard</h1>
