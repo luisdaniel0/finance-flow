@@ -74,23 +74,15 @@ const Dashboard = ({ transactionList }) => {
 
   console.log(chartData);
 
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#f355c4",
+    "#f34444",
+  ];
 
-  /*
-  [
-    ['Dining', 40],
-    ['Bills', 1200],
-    ['Other', 100]
-  ]
-  [
-    {
-      name: "Dining", value: "40"
-    },
-    {
-      name: "Bills", value: 1200
-    }
-  ]
-  */
   return (
     <div className="w-full p-8 m-8">
       <h1>Dashboard</h1>
@@ -119,17 +111,18 @@ const Dashboard = ({ transactionList }) => {
       </div>
       <div className="">
         <h1>Spending by Category</h1>
-        <PieChart width={500} height={500}>
+        <PieChart width={600} height={500}>
           <Pie
             data={chartData}
-            labelLine={false}
             dataKey={"value"}
             nameKey={"name"}
-            cx={"50%"}
+            cx={"55%"}
             cy={"50%"}
             outerRadius={150}
-            label={(entry) => {
-              return entry.name;
+            label={{
+              position: "inside",
+              fill: "white",
+              fontSize: "12",
             }}
           >
             {chartData.map((entry, index) => (
