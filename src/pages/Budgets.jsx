@@ -11,7 +11,7 @@ const Budgets = () => {
       <h1 className="">My Budgets</h1>
       <div className=" grid grid-cols-3 mt-8 gap-10 h-30 w-220">
         <div className="">
-          <BudgetForm />
+          <BudgetForm budgets={budgets} setBudgets={setBudgets} />
         </div>
       </div>
     </div>

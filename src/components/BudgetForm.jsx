@@ -2,6 +2,10 @@ import { useRef } from "react";
 import BudgetList from "./BudgetList";
 
 const BudgetForm = () => {
+  const [formData, setFormData] = useState({
+    budgetName: "",
+    budgetAmount: "",
+  });
   const dialogRef = useRef(null);
 
   function onClose() {
@@ -14,6 +18,7 @@ const BudgetForm = () => {
   function createBudget(e) {
     e.preventDefault();
     console.log("budget button works!");
+
     dialogRef.current.close();
   }
   return (
@@ -34,6 +39,12 @@ const BudgetForm = () => {
               type="text"
               placeholder="e.g. Home Decor"
               className="bg-gray-600 text-white p-2 rounded mt-1 w-80"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  budgetName: e.target.value,
+                })
+              }
             />
           </label>
           <label className="flex flex-col">
@@ -43,6 +54,12 @@ const BudgetForm = () => {
               type="text"
               placeholder="e.g. $5000"
               className="bg-gray-600 text-white p-2 rounded mt-1 w-80"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  budgetAmount: e.target.value,
+                })
+              }
             />
           </label>
           <button type="submit" className="border p-2">
