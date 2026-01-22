@@ -1,7 +1,7 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import BudgetList from "./BudgetList";
 
-const BudgetForm = () => {
+const BudgetForm = ({ addBudget }) => {
   const [formData, setFormData] = useState({
     budgetName: "",
     budgetAmount: "",
@@ -17,7 +17,18 @@ const BudgetForm = () => {
   }
   function createBudget(e) {
     e.preventDefault();
-    console.log("budget button works!");
+    const newBudget = {
+      id: Date.now(),
+      name: formData.budgetName,
+      amount: parseFloat(formData.budgetAmount),
+    };
+
+    addBudget(newBudget);
+
+    setFormData({
+      budgetName: "",
+      budgetAmount: "",
+    });
 
     dialogRef.current.close();
   }
@@ -45,6 +56,7 @@ const BudgetForm = () => {
                   budgetName: e.target.value,
                 })
               }
+              value={formData.budgetName}
             />
           </label>
           <label className="flex flex-col">
@@ -60,6 +72,7 @@ const BudgetForm = () => {
                   budgetAmount: e.target.value,
                 })
               }
+              value={formData.budgetAmount}
             />
           </label>
           <button type="submit" className="border p-2">
