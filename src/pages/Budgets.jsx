@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BudgetForm from "../components/BudgetForm";
 import BudgetList from "../components/BudgetList";
 
 const Budgets = () => {
-  const [budgets, setBudgets] = useState([]);
+  const [budgets, setBudgets] = useState(
+    JSON.parse(localStorage.getItem("budgets")) || [],
+  );
+
+  useEffect(() => {
+    localStorage.setItem("budgets", JSON.stringify(budgets));
+  }, [budgets]);
 
   function addBudget(newBudget) {
     setBudgets([...budgets, newBudget]);
