@@ -25,6 +25,10 @@ const Budgets = ({ transactionList }) => {
     setBudgets([...budgets, newBudget]);
   }
 
+  function handleDelete(budgetId) {
+    setBudgets(budgets.filter((budget) => budget.id !== budgetId));
+  }
+
   // const filteredTransactions = transactionList.filter((transaction) =>
   //   budgets.some((budget) => budget.category === transaction.category),
   // );
@@ -48,6 +52,7 @@ const Budgets = ({ transactionList }) => {
               key={budget.id}
               budget={budget}
               budgetCalculation={budgetCalculation}
+              handleDelete={handleDelete}
             />
           );
         })}

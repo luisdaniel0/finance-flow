@@ -1,4 +1,4 @@
-const BudgetList = ({ budget, budgetCalculation }) => {
+const BudgetList = ({ budget, budgetCalculation, handleDelete }) => {
   console.log(budgetCalculation);
   return (
     <>
@@ -12,6 +12,7 @@ const BudgetList = ({ budget, budgetCalculation }) => {
           <div>
             <span>${budgetCalculation} spent</span>
             <span>${budget.amount - budgetCalculation} remaining</span>
+            <span onClick={() => handleDelete(budget.id)}>Delete</span>
           </div>
         </div>
       </div>
