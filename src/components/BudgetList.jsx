@@ -1,19 +1,29 @@
+import { Trash2 } from "lucide-react";
+
 const BudgetList = ({ budget, budgetCalculation, handleDelete }) => {
   console.log(budgetCalculation);
   return (
     <>
-      <div className="flex w-80 h-30 text-center rounded-lg border  items-center content-center">
-        <div className="flex justify-between content-center m-3">
+      <div className="flex flex-col w-90 h-40  rounded-lg border  ">
+        <div className="flex justify-between p-5">
           <div>
-            <h2>{budget.name}</h2>
+            <h2 className="text-lg font-bold ">{budget.name}</h2>
             <p>{budget.category}</p>
           </div>
-          <span>{budget.amount}</span>
-          <div>
-            <span>${budgetCalculation} spent</span>
-            <span>${budget.amount - budgetCalculation} remaining</span>
-            <span onClick={() => handleDelete(budget.id)}>Delete</span>
-          </div>
+          <span className="text-lg font-bold text-[#646cff] content-center">
+            ${budget.amount}
+          </span>
+        </div>
+
+        <div className="flex justify-between p-5">
+          <span>${budgetCalculation} spent</span>
+          <span>${budget.amount - budgetCalculation} remaining</span>
+          <span
+            className="cursor-pointer"
+            onClick={() => handleDelete(budget.id)}
+          >
+            <Trash2 />
+          </span>
         </div>
       </div>
     </>
