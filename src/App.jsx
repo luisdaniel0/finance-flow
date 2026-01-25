@@ -5,10 +5,14 @@ import Transactions from "./pages/Transactions";
 import Budgets from "./pages/Budgets";
 import Import from "./pages/Import";
 import { useState } from "react";
+import BudgetDetail from "./pages/BudgetDetails";
 
 function App() {
   const [transactionList, setTransactionList] = useState(
     JSON.parse(localStorage.getItem("transactions")) || [],
+  );
+  const [budgets, setBudgets] = useState(
+    JSON.parse(localStorage.getItem("budgets")) || [],
   );
   return (
     <div className="flex">
@@ -30,7 +34,23 @@ function App() {
         />
         <Route
           path="/budgets"
-          element={<Budgets transactionList={transactionList} />}
+          element={
+            <Budgets
+              transactionList={transactionList}
+              budgets={budgets}
+              setBudgets={setBudgets}
+            />
+          }
+        />
+        <Route
+          path="/budgets/:id"
+          element={
+            <BudgetDetail
+              transactionList={transactionList}
+              budgets={budgets}
+              setBudgets={setBudgets}
+            />
+          }
         />
         <Route path="/import" element={<Import />} />
       </Routes>

@@ -109,7 +109,7 @@ const BudgetForm = ({ addBudget, budgetCategories }) => {
       </dialog>
       <button
         onClick={() => onOpen()}
-        className=" rounded-lg border w-90 h-40
+        className=" rounded-lg border w-90 h-45
       justify-center  flex flex-col cursor-pointer font-bold text-lg bg-gray-800 "
       >
         <p>+</p>

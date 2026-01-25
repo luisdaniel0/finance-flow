@@ -33,7 +33,7 @@ const Dashboard = ({ transactionList }) => {
   function sumOfIncome() {
     const total = income.reduce(
       (sum, transaction) => sum + parseFloat(transaction.amount),
-      0
+      0,
     );
     return total;
   }
@@ -41,7 +41,7 @@ const Dashboard = ({ transactionList }) => {
   function sumOfExpense() {
     const total = expense.reduce(
       (sum, transaction) => sum + parseFloat(transaction.amount),
-      0
+      0,
     );
     return total;
   }
@@ -69,7 +69,7 @@ const Dashboard = ({ transactionList }) => {
     ([category, amount]) => ({
       name: category,
       value: amount,
-    })
+    }),
   );
 
   console.log(chartData);

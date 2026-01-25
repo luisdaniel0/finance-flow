@@ -1,12 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import BudgetForm from "../components/BudgetForm";
 import BudgetList from "../components/BudgetList";
 
-const Budgets = ({ transactionList }) => {
-  const [budgets, setBudgets] = useState(
-    JSON.parse(localStorage.getItem("budgets")) || [],
-  );
-
+const Budgets = ({ transactionList, budgets, setBudgets }) => {
   useEffect(() => {
     localStorage.setItem("budgets", JSON.stringify(budgets));
   }, [budgets]);
