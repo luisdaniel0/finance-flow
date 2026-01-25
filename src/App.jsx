@@ -8,7 +8,7 @@ import { useState } from "react";
 
 function App() {
   const [transactionList, setTransactionList] = useState(
-    JSON.parse(localStorage.getItem("transactions")) || []
+    JSON.parse(localStorage.getItem("transactions")) || [],
   );
   return (
     <div className="flex">
@@ -28,7 +28,10 @@ function App() {
             />
           }
         />
-        <Route path="/budgets" element={<Budgets />} />
+        <Route
+          path="/budgets"
+          element={<Budgets transactionList={transactionList} />}
+        />
         <Route path="/import" element={<Import />} />
       </Routes>
     </div>

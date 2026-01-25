@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
-import BudgetList from "./BudgetList";
 
-const BudgetForm = ({ addBudget }) => {
+const BudgetForm = ({ addBudget, budgetCategories }) => {
   const [formData, setFormData] = useState({
     budgetName: "",
     budgetAmount: "",
+    category: "Groceries",
   });
   const dialogRef = useRef(null);
 
@@ -21,6 +21,7 @@ const BudgetForm = ({ addBudget }) => {
       id: Date.now(),
       name: formData.budgetName,
       amount: parseFloat(formData.budgetAmount),
+      category: formData.category,
     };
 
     addBudget(newBudget);
@@ -28,6 +29,7 @@ const BudgetForm = ({ addBudget }) => {
     setFormData({
       budgetName: "",
       budgetAmount: "",
+      category: "Groceries",
     });
 
     dialogRef.current.close();
@@ -39,7 +41,7 @@ const BudgetForm = ({ addBudget }) => {
         className="fixed inset-0 m-auto p-6 rounded-lg backdrop:bg-black/50"
       >
         <form
-          className="flex flex-col border h-90 w-200 justify-between p-6"
+          className="flex flex-col border h-120 w-200 justify-between p-6 gap-5"
           onSubmit={createBudget}
         >
           <h2 className="text-2xl font-bold">Create New Budget</h2>
@@ -75,6 +77,24 @@ const BudgetForm = ({ addBudget }) => {
               value={formData.budgetAmount}
             />
           </label>
+          <label className="flex flex-col">
+            Category
+            <select
+              name="category"
+              className="bg-gray-600 text-white p-2 rounded mt-1 w-80"
+              value={formData.category}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  category: e.target.value,
+                })
+              }
+            >
+              {budgetCategories.map((category) => (
+                <option key={category}>{category}</option>
+              ))}
+            </select>
+          </label>
           <button type="submit" className="border p-2">
             Create Budget
           </button>
@@ -89,8 +109,8 @@ const BudgetForm = ({ addBudget }) => {
       </dialog>
       <button
         onClick={() => onOpen()}
-        className="text-center rounded-lg border h-25
-      justify-center flex w-70 items-center flex flex-col cursor-pointer"
+        className="text-center rounded-lg border h-30
+      justify-center flex w-80 items-center flex flex-col cursor-pointer"
       >
         <p>+</p>
         <p>Create Budget</p>
