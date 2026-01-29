@@ -2,8 +2,11 @@ import { useParams } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { SquarePen } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Save } from "lucide-react";
+import { useState } from "react";
 
 const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
+  const [editing, setEditing] = useState(false);
   const { id } = useParams();
 
   const budget = budgets.find((tran) => tran.id === Number(id));
@@ -22,14 +25,21 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
   const progressPercentage = (budgetCalculation / budget.amount) * 100;
 
   function deleteBudget(budgetId) {
-    console.log(budgetId);
-    console.log(budgets);
-    // const deleted = budgets.filter((budget) => {
-    //   return budget.id !== budgetId;
-    // });
-    // setBudgets({ ...budgets, deleted });
     setBudgets(budgets.filter((budget) => budget.id !== budgetId));
   }
+
+  function handleEdit() {
+    setEditing(true);
+  }
+
+  //have editing state in parent component and pass the editing state/function down to the proper components
+
+  //edit budget state (budget.name === e.target.value)
+  //how to edit the budget.name inline
+  //typing state? add state to budget card that triggers editing based on boolean
+  //edit => save
+
+  //ternary operators// if editing===true render an input form, otherwise render the card as is?
 
   return (
     <>
@@ -37,7 +47,29 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
         <div className="grid grid-cols-2">
           <div className="flex flex-col w-100 h-45  rounded-lg border p-5 justify-around">
             <div className="flex justify-between">
-              <h1 className="text-lg font-bold">{budget.name}</h1>
+              <div>
+                {!editing ? (
+                  <h1 className="text-lg font-bold">{budget.name}</h1>
+                ) : (
+                  <input
+                    className="text-lg font-bold"
+                    type="text"
+                    value={budget.name}
+                    onChange={(e) =>
+                      setBudgets(
+                        budgets.map((b) => {
+                          if (b.id === budget.id) {
+                            return { ...b, name: e.target.value };
+                          } else {
+                            return b;
+                          }
+                        }),
+                      )
+                    }
+                  />
+                )}
+                <p className="text-md font-bold">{budget.category}</p>
+              </div>
               <p className="text-lg font-bold text-regal-blue">
                 ${budget.amount}
               </p>
@@ -54,10 +86,23 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
             </div>
           </div>
           <div className="flex  items-center gap-5">
-            <button className="flex gap-1 cursor-pointer border-2 p-4 rounded-lg bg-regal-blue">
-              <SquarePen />
-              <span>Edit</span>
-            </button>
+            {editing ? (
+              <button
+                className="flex gap-1 cursor-pointer  p-4 rounded-lg bg-regal-blue"
+                onClick={() => setEditing(false)}
+              >
+                <Save />
+                <span>Save</span>
+              </button>
+            ) : (
+              <button
+                className="flex gap-1 cursor-pointer  p-4 rounded-lg bg-regal-blue"
+                onClick={() => handleEdit()}
+              >
+                <SquarePen />
+                <span>Edit</span>
+              </button>
+            )}
 
             <Link to="/budgets">
               <button
