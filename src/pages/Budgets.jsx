@@ -25,11 +25,6 @@ const Budgets = ({ transactionList, budgets, setBudgets }) => {
     setBudgets(budgets.filter((budget) => budget.id !== budgetId));
   }
 
-  // const filteredTransactions = transactionList.filter((transaction) =>
-  //   budgets.some((budget) => budget.category === transaction.category),
-  // );
-  // console.log(filteredTransactions);
-
   return (
     <div className="w-full m-8 p-8">
       <h1 className="">My Budgets</h1>
