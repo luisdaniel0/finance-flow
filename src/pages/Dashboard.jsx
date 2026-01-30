@@ -11,6 +11,7 @@ const Dashboard = ({ transactionList }) => {
 
   const expense = transactionList.filter((tran) => {
     const tranDate = new Date(tran.date);
+    console.log(tranDate);
 
     return (
       tran.type === "expense" &&
