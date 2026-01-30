@@ -1,7 +1,6 @@
-import { Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const BudgetList = ({ budget, budgetCalculation, handleDelete }) => {
+const BudgetList = ({ budget, budgetCalculation }) => {
   const progressPercentage = (budgetCalculation / budget.amount) * 100;
 
   return (
@@ -21,12 +20,6 @@ const BudgetList = ({ budget, budgetCalculation, handleDelete }) => {
           <div className="flex justify-between">
             <span>${budgetCalculation} spent</span>
             <span>${budget.amount - budgetCalculation} remaining</span>
-            <span
-              className="cursor-pointer"
-              onClick={() => handleDelete(budget.id)}
-            >
-              <Trash2 />
-            </span>
           </div>
           <div className=" h-2 w-full bg-gray-300 rounded-xl  ">
             <div
@@ -41,5 +34,3 @@ const BudgetList = ({ budget, budgetCalculation, handleDelete }) => {
 };
 
 export default BudgetList;
-
-//have total amount spent in that category, now calculate how much of the budget is actually left

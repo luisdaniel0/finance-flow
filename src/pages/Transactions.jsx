@@ -3,7 +3,11 @@ import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 import { autoCategorizeDescription } from "../services/apiCall";
 
-const Transactions = ({ transactionList, setTransactionList }) => {
+const Transactions = ({
+  transactionList,
+  setTransactionList,
+  handleDelete,
+}) => {
   const [transactionData, setTransactionData] = useState({
     type: "expense",
     amount: "",
@@ -59,7 +63,7 @@ const Transactions = ({ transactionList, setTransactionList }) => {
     try {
       const aiCategorize = await autoCategorizeDescription(
         transactionData.description,
-        categoryType
+        categoryType,
       );
 
       setTransactionData({ ...transactionData, category: aiCategorize });
@@ -69,12 +73,6 @@ const Transactions = ({ transactionList, setTransactionList }) => {
     } finally {
       setIsLoading(false);
     }
-  }
-
-  function handleDelete(transactionId) {
-    setTransactionList(
-      transactionList.filter((transaction) => transaction.id !== transactionId)
-    );
   }
 
   return (

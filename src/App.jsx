@@ -14,6 +14,11 @@ function App() {
   const [budgets, setBudgets] = useState(
     JSON.parse(localStorage.getItem("budgets")) || [],
   );
+  function handleDelete(transactionId) {
+    setTransactionList(
+      transactionList.filter((transaction) => transaction.id !== transactionId),
+    );
+  }
   return (
     <div className="flex">
       <Navbar />
@@ -29,6 +34,7 @@ function App() {
             <Transactions
               transactionList={transactionList}
               setTransactionList={setTransactionList}
+              handleDelete={handleDelete}
             />
           }
         />
@@ -49,6 +55,7 @@ function App() {
               transactionList={transactionList}
               budgets={budgets}
               setBudgets={setBudgets}
+              handleDelete={handleDelete}
             />
           }
         />

@@ -5,10 +5,23 @@ import { Link } from "react-router-dom";
 import { Save } from "lucide-react";
 import { useState } from "react";
 
-const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
+const BudgetDetail = ({
+  transactionList,
+  budgets,
+  setBudgets,
+  handleDelete,
+}) => {
   const [editing, setEditing] = useState(false);
   const { id } = useParams();
-
+  const expenseCategory = [
+    "Groceries",
+    "Transportation",
+    "Dining",
+    "Bills",
+    "Shopping",
+    "Healthcare",
+    "Other",
+  ];
   const budget = budgets.find((tran) => tran.id === Number(id));
   const recentTransactions = transactionList.filter(
     (transaction) => transaction.category === budget.category,
@@ -32,15 +45,17 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
     setEditing(true);
   }
 
-  //have editing state in parent component and pass the editing state/function down to the proper components
-
-  //edit budget state (budget.name === e.target.value)
-  //how to edit the budget.name inline
-  //typing state? add state to budget card that triggers editing based on boolean
-  //edit => save
-
-  //ternary operators// if editing===true render an input form, otherwise render the card as is?
-
+  function editBudget(e, inputField) {
+    setBudgets(
+      budgets.map((b) => {
+        if (b.id === budget.id) {
+          return { ...b, [inputField]: e.target.value };
+        } else {
+          return b;
+        }
+      }),
+    );
+  }
   return (
     <>
       <div className="w-full p-8 m-8">
@@ -55,24 +70,40 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
                     className="text-lg font-bold"
                     type="text"
                     value={budget.name}
-                    onChange={(e) =>
-                      setBudgets(
-                        budgets.map((b) => {
-                          if (b.id === budget.id) {
-                            return { ...b, name: e.target.value };
-                          } else {
-                            return b;
-                          }
-                        }),
-                      )
-                    }
+                    onChange={(e) => editBudget(e, "name")}
                   />
                 )}
-                <p className="text-md font-bold">{budget.category}</p>
+
+                {/* onChange={editFunction(e,name)} */}
+
+                {!editing ? (
+                  <p className="text-md font-bold">{budget.category}</p>
+                ) : (
+                  <select
+                    className="bg-gray-600 text-white rounded mt-1 w-40"
+                    onChange={(e) => editBudget(e, "category")}
+                    value={budget.category}
+                  >
+                    {expenseCategory.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
-              <p className="text-lg font-bold text-regal-blue">
-                ${budget.amount}
-              </p>
+              {!editing ? (
+                <p className="text-lg font-bold text-regal-blue">
+                  ${budget.amount}
+                </p>
+              ) : (
+                <input
+                  className="flex text-end text-lg font-bold text-regal-blue w-full "
+                  type="text"
+                  value={budget.amount}
+                  onChange={(e) => editBudget(e, "amount")}
+                />
+              )}
             </div>
             <div className="flex justify-between">
               <span>${budgetCalculation} spent</span>
@@ -142,7 +173,10 @@ const BudgetDetail = ({ transactionList, budgets, setBudgets }) => {
                 <span>{transaction.date}</span>
               </div>
               <div>
-                <button className="cursor-pointer">
+                <button
+                  className="cursor-pointer"
+                  onClick={() => handleDelete(transaction.id)}
+                >
                   <Trash2 />
                 </button>
               </div>
