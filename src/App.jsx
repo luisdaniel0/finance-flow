@@ -59,7 +59,15 @@ function App() {
             />
           }
         />
-        <Route path="/import" element={<Import />} />
+        <Route
+          path="/import"
+          element={
+            <Import
+              transactionList={transactionList}
+              setTransactionList={setTransactionList}
+            />
+          }
+        />
       </Routes>
     </div>
   );
