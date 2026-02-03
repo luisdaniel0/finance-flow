@@ -11,7 +11,6 @@ const Dashboard = ({ transactionList }) => {
 
   const expense = transactionList.filter((tran) => {
     const tranDate = new Date(tran.date);
-    console.log(tranDate);
 
     return (
       tran.type === "expense" &&
@@ -19,7 +18,6 @@ const Dashboard = ({ transactionList }) => {
       tranDate.getFullYear() === currentDateYear
     );
   });
-  console.log(expense);
 
   const income = transactionList.filter((tran) => {
     const tranDate = new Date(tran.date);
@@ -72,8 +70,6 @@ const Dashboard = ({ transactionList }) => {
       value: amount,
     }),
   );
-
-  console.log(chartData);
 
   const COLORS = [
     "#0088FE",

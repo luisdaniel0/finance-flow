@@ -13,3 +13,16 @@ export const autoCategorizeDescription = async (desc, category) => {
 
   return response.text;
 };
+
+export const categorizeImportedTransactions = async (tran, category) => {
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash-lite",
+    contents: `Categorize this transaction: ${JSON.stringify(tran)}
+
+    Choose exactly ONE category from this list: ${category}
+
+    Respond with ONLY the category name. No explanation, no punctuation, just the single word.`,
+  });
+
+  return response.text;
+};

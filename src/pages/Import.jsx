@@ -1,22 +1,32 @@
 import { useState } from "react";
 import Papa from "papaparse";
-
-//Details: Credit/DSLIP = income, DEBIT=Expense
-//Split description and grab first 2 words to pass to transaction
+import { categorizeImportedTransactions } from "../services/apiCall";
 
 //EDGE CASE:
 //have to figure out how to parse only 31 days from today's date, maybe ask AI? right now
 // its only returning data that matches the current date but what if its the 1st of the month?
 
-/*
-how to get Category off the csv data? 
-do i need reformat the Date in transactionList? 
-
-
-*/
-
 const Imports = ({ transactionList, setTransactionList }) => {
   const [previewData, setPreviewData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const allCategories = [
+    "Groceries",
+    "Transportation",
+    "Dining",
+    "Bills",
+    "Shopping",
+    "Healthcare",
+    "Salary",
+    "Freelance",
+    "Business",
+    "Investment",
+    "Gift",
+    "Bonus",
+    "Refund",
+    "Other",
+  ];
+
   function parseCSV(e) {
     const file = e.target.files[0];
     Papa.parse(file, {
@@ -40,7 +50,23 @@ const Imports = ({ transactionList, setTransactionList }) => {
     );
   });
 
-  function transformCSVData(csv) {
+  async function categorizeTransactions(transaction) {
+    try {
+      const categorize = await categorizeImportedTransactions(
+        transaction,
+        allCategories,
+      );
+      console.log(categorize);
+      return categorize;
+    } catch (error) {
+      alert("failed to categorize!", error);
+      return "Other";
+    }
+  }
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  async function transformCSVData(csv) {
+    setIsLoading(true);
     const transformed = csv.map((element, index) => {
       return {
         type: parseFloat(element.Amount) < 0 ? "expense" : "income",
@@ -48,13 +74,23 @@ const Imports = ({ transactionList, setTransactionList }) => {
         date: element["Posting Date"],
         description: element.Description,
         id: Date.now() + index,
-        category: "Uncategorized",
+        category: "Other",
       };
     });
-    console.log("transformed", transformed);
-    setTransactionList([...transactionList, ...transformed]);
+    const results = [];
+
+    for (const transaction of transformed) {
+      const api = await categorizeTransactions(transaction);
+      const newObj = { ...transaction, category: api };
+      console.log(newObj);
+      results.push(newObj);
+      await delay(6000);
+    }
+
+    setTransactionList([...transactionList, ...results]);
+    setIsLoading(false);
+    setPreviewData([]);
   }
-  console.log("transactionList State:", transactionList);
 
   return (
     <div className="w-full p-8 m-8">
@@ -94,12 +130,16 @@ const Imports = ({ transactionList, setTransactionList }) => {
         <>
           <div className="flex justify-center mt-10">
             <button
-              className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer mr-10"
+              className={`rounded-lg p-3 bg-regal-blue font-bold cursor-pointer mr-10 ${isLoading}`}
               onClick={() => transformCSVData(parsedImport)}
+              disabled
             >
               Import
             </button>
-            <button className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer">
+            <button
+              className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer"
+              onClick={() => setPreviewData([])}
+            >
               Cancel
             </button>
           </div>

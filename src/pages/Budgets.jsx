@@ -53,9 +53,3 @@ const Budgets = ({ transactionList, budgets, setBudgets }) => {
 };
 
 export default Budgets;
-
-//map over transactionList and calculate the amount of each transaction of the specific category that was chosen in the budgetForm
-//filter transaction list and return transactions that === to budget category
-// add all amounts in each transaction from that category and that will be the amount spent
-
-//filter then map whatever is returned and insert List component
