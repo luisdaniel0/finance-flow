@@ -130,11 +130,11 @@ const Imports = ({ transactionList, setTransactionList }) => {
         <>
           <div className="flex justify-center mt-10">
             <button
-              className={`rounded-lg p-3 bg-regal-blue font-bold cursor-pointer mr-10 ${isLoading}`}
+              className={`rounded-lg p-3 font-bold mr-10 ${isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-regal-blue cursor-pointer"}`}
               onClick={() => transformCSVData(parsedImport)}
-              disabled
+              disabled={isLoading}
             >
-              Import
+              {isLoading ? "Importing..." : "Import"}
             </button>
             <button
               className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer"
