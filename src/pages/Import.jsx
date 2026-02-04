@@ -6,6 +6,8 @@ import { categorizeImportedTransactions } from "../services/apiCall";
 //have to figure out how to parse only 31 days from today's date, maybe ask AI? right now
 // its only returning data that matches the current date but what if its the 1st of the month?
 
+//TODO: study and make sure to fully understand everything that is happening in this code. there is a lot to digest, and half of it was claude
+
 const Imports = ({ transactionList, setTransactionList }) => {
   const [previewData, setPreviewData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -37,7 +39,7 @@ const Imports = ({ transactionList, setTransactionList }) => {
     });
   }
 
-  const currentDate = new Date("2026-01-30");
+  const currentDate = new Date();
   const currentDateMonth = currentDate.getMonth();
   const currentDateYear = currentDate.getFullYear();
 
@@ -56,10 +58,9 @@ const Imports = ({ transactionList, setTransactionList }) => {
         transaction,
         allCategories,
       );
-      console.log(categorize);
       return categorize;
     } catch (error) {
-      alert("failed to categorize!", error);
+      console.error(error);
       return "Other";
     }
   }
@@ -82,7 +83,6 @@ const Imports = ({ transactionList, setTransactionList }) => {
     for (const transaction of transformed) {
       const api = await categorizeTransactions(transaction);
       const newObj = { ...transaction, category: api };
-      console.log(newObj);
       results.push(newObj);
       await delay(6000);
     }
@@ -104,16 +104,22 @@ const Imports = ({ transactionList, setTransactionList }) => {
         />
       </label>
       {previewData.length > 0 && (
-        <div className="grid grid-cols-3 text-center mt-15">
-          <div>Name</div>
-          <div>Amount</div>
-          <div>Date</div>
-        </div>
+        <>
+          <h1 className="m-7 text-center font-bold text-lg ">
+            Transaction Preview<br></br> (Showing 20 of {previewData.length}{" "}
+            transactions)
+          </h1>
+          <div className="grid grid-cols-3 text-center border p-2 font-bold">
+            <div>Name</div>
+            <div>Amount</div>
+            <div>Date</div>
+          </div>
+        </>
       )}
 
       <div>
         {previewData.slice(0, 20).map((data, index) => (
-          <div className="grid grid-cols-3 text-center" key={index}>
+          <div className="grid grid-cols-3 text-center border" key={index}>
             <div>
               <span>{data.Description}</span>
             </div>
@@ -131,7 +137,7 @@ const Imports = ({ transactionList, setTransactionList }) => {
           <div className="flex justify-center mt-10">
             <button
               className={`rounded-lg p-3 font-bold mr-10 ${isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-regal-blue cursor-pointer"}`}
-              onClick={() => transformCSVData(parsedImport)}
+              onClick={() => transformCSVData(parsedImport.slice(0, 4))}
               disabled={isLoading}
             >
               {isLoading ? "Importing..." : "Import"}
