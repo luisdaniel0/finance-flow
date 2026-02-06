@@ -38,8 +38,15 @@ const BudgetForm = ({ addBudget, budgetCategories }) => {
     <>
       <dialog
         ref={dialogRef}
-        className="fixed inset-0 m-auto p-6 rounded-lg backdrop:bg-black/50"
+        className="fixed inset-0 m-auto p-6 rounded-lg backdrop:bg-black/50 relative"
       >
+        <button
+          autoFocus
+          onClick={() => onClose()}
+          className="absolute right-9 top-8 text-lg font-bold cursor-pointer"
+        >
+          X
+        </button>
         <form
           className="flex flex-col border h-120 w-200 justify-between p-6 gap-5"
           onSubmit={createBudget}
@@ -95,17 +102,10 @@ const BudgetForm = ({ addBudget, budgetCategories }) => {
               ))}
             </select>
           </label>
-          <button type="submit" className="border p-2">
+          <button type="submit" className="border p-2 cursor-pointer">
             Create Budget
           </button>
         </form>
-        <button
-          autoFocus
-          onClick={() => onClose()}
-          className="position:relative"
-        >
-          X
-        </button>
       </dialog>
       <button
         onClick={() => onOpen()}
