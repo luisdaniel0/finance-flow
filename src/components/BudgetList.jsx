@@ -5,8 +5,11 @@ const BudgetList = ({ budget, budgetCalculation }) => {
 
   return (
     <>
-      <div className="flex flex-col w-90 h-45  rounded-lg border p-5 justify-around">
-        <Link to={`/budgets/${budget.id}`}>
+      <div className=" w-90 h-45  rounded-lg border p-5 ">
+        <Link
+          to={`/budgets/${budget.id}`}
+          className="flex flex-col h-full justify-between"
+        >
           <div className="flex justify-between">
             <div>
               <h2 className="text-lg font-bold ">{budget.name}</h2>
@@ -17,15 +20,17 @@ const BudgetList = ({ budget, budgetCalculation }) => {
             </span>
           </div>
 
-          <div className="flex justify-between">
-            <span>${budgetCalculation} spent</span>
-            <span>${budget.amount - budgetCalculation} remaining</span>
-          </div>
-          <div className=" h-2 w-full bg-gray-300 rounded-xl  ">
-            <div
-              style={{ maxWidth: `${progressPercentage}%` }}
-              className={`h-full bg-[#646cff]`}
-            ></div>
+          <div className="">
+            <div className="flex justify-between mb-2">
+              <span>${budgetCalculation} spent</span>
+              <span>${budget.amount - budgetCalculation} remaining</span>
+            </div>
+            <div className=" h-2 w-full bg-gray-300 rounded-xl  ">
+              <div
+                style={{ maxWidth: `${progressPercentage}%` }}
+                className={`h-full bg-[#646cff]`}
+              ></div>
+            </div>
           </div>
         </Link>
       </div>

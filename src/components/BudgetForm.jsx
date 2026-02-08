@@ -38,7 +38,7 @@ const BudgetForm = ({ addBudget, budgetCategories }) => {
     <>
       <dialog
         ref={dialogRef}
-        className="fixed inset-0 m-auto p-6 rounded-lg backdrop:bg-black/50 relative"
+        className=" m-auto p-6 rounded-lg backdrop:bg-black/50 relative"
       >
         <button
           autoFocus

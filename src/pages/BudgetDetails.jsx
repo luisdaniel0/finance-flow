@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Trash2 } from "lucide-react";
 import { SquarePen } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Save } from "lucide-react";
+import { Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 const BudgetDetail = ({
@@ -59,6 +59,11 @@ const BudgetDetail = ({
   return (
     <>
       <div className="w-full p-8 m-8">
+        <Link to="/budgets">
+          <button className="mb-10 cursor-pointer flex gap-3 items-center">
+            <ArrowLeft size={30} /> Back to Budgets
+          </button>
+        </Link>
         <div className="grid grid-cols-2">
           <div className="flex flex-col w-100 h-45  rounded-lg border p-5 justify-around">
             <div className="flex justify-between">
