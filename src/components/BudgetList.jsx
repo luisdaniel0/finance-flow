@@ -5,7 +5,7 @@ const BudgetList = ({ budget, budgetCalculation }) => {
 
   return (
     <>
-      <div className=" w-90 h-45  rounded-lg border p-5 ">
+      <div className=" max-w-90 w-full h-45  rounded-lg border p-5 ">
         <Link
           to={`/budgets/${budget.id}`}
           className="flex flex-col h-full justify-between"

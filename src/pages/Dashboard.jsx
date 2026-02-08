@@ -106,33 +106,32 @@ const Dashboard = ({ transactionList }) => {
           <WalletCards />
         </div>
       </div>
-      <div className="">
-        <h1>Spending by Category</h1>
-        <PieChart width={600} height={500}>
-          <Pie
-            data={chartData}
-            dataKey={"value"}
-            nameKey={"name"}
-            cx={"55%"}
-            cy={"50%"}
-            outerRadius={150}
-            label={{
-              position: "inside",
-              fill: "white",
-              fontSize: "12",
-            }}
-          >
-            {chartData.map((entry, index) => (
-              <Cell
-                key={`cell-${entry.name}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
-      </div>
+
+      <h1>Spending by Category</h1>
+      <PieChart width={600} height={500}>
+        <Pie
+          data={chartData}
+          dataKey={"value"}
+          nameKey={"name"}
+          cx={"55%"}
+          cy={"50%"}
+          outerRadius={150}
+          label={{
+            position: "inside",
+            fill: "white",
+            fontSize: "12",
+          }}
+        >
+          {chartData.map((entry, index) => (
+            <Cell
+              key={`cell-${entry.name}`}
+              fill={COLORS[index % COLORS.length]}
+            />
+          ))}
+        </Pie>
+        <Tooltip />
+        <Legend />
+      </PieChart>
     </div>
   );
 };

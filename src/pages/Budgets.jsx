@@ -28,7 +28,7 @@ const Budgets = ({ transactionList, budgets, setBudgets }) => {
   return (
     <div className="w-full m-8 p-8">
       <h1 className="">My Budgets</h1>
-      <div className="grid grid-cols-3 mt-8 gap-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 gap-10 ">
         <BudgetForm addBudget={addBudget} budgetCategories={budgetCategories} />
         {budgets.map((budget) => {
           const budgetCalculation = transactionList
