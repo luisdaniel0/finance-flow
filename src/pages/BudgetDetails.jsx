@@ -69,7 +69,7 @@ const BudgetDetail = ({
             <div className="flex justify-between">
               <div>
                 {!editing ? (
-                  <h1 className="text-lg font-bold">{budget.name}</h1>
+                  <p className="text-lg font-bold">{budget.name}</p>
                 ) : (
                   <input
                     className="text-lg font-bold"
@@ -82,7 +82,7 @@ const BudgetDetail = ({
                 {/* onChange={editFunction(e,name)} */}
 
                 {!editing ? (
-                  <p className="text-md font-bold">{budget.category}</p>
+                  <p className="font-bold">{budget.category}</p>
                 ) : (
                   <select
                     className="bg-gray-600 text-white rounded mt-1 w-40"

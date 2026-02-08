@@ -68,7 +68,7 @@ const TransactionForm = ({
               setTransactionData({
                 ...transactionData,
                 type: "expense",
-                category: "groceries",
+                category: "Groceries",
               })
             }
           >
@@ -85,7 +85,7 @@ const TransactionForm = ({
               setTransactionData({
                 ...transactionData,
                 type: "income",
-                category: "salary",
+                category: "Salary",
               })
             }
           >
