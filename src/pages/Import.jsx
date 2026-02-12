@@ -11,7 +11,7 @@ import { categorizeImportedTransactions } from "../services/apiCall";
 const Imports = ({ transactionList, setTransactionList }) => {
   const [previewData, setPreviewData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log();
   const allCategories = [
     "Groceries",
     "Transportation",
