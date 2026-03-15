@@ -1,6 +1,15 @@
 import { Trash2 } from "lucide-react";
+import { Transaction } from "../types";
 
-const TransactionList = ({ transactionList, handleDelete }) => {
+interface TransactionListProps {
+  transactionList: Transaction;
+  handleDelete: () => void;
+}
+
+const TransactionList = ({
+  transactionList,
+  handleDelete,
+}: TransactionListProps) => {
   return (
     <>
       <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">

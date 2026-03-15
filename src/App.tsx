@@ -7,16 +7,20 @@ import Import from "./pages/Import";
 import { useState } from "react";
 import BudgetDetail from "./pages/BudgetDetails";
 
+import { Transaction, Budget } from "./types";
+
 function App() {
-  const [transactionList, setTransactionList] = useState(
-    JSON.parse(localStorage.getItem("transactions")) || [],
+  const [transactionList, setTransactionList] = useState<Transaction[]>(
+    JSON.parse(localStorage.getItem("transactions") || "[]"),
   );
-  const [budgets, setBudgets] = useState(
-    JSON.parse(localStorage.getItem("budgets")) || [],
+  const [budgets, setBudgets] = useState<Budget>(
+    JSON.parse(localStorage.getItem("budgets") || "[]"),
   );
-  function handleDelete(transactionId) {
+  function handleDelete(transactionId: number) {
     setTransactionList(
-      transactionList.filter((transaction) => transaction.id !== transactionId),
+      transactionList.filter(
+        (transaction: Transaction) => transaction.id !== transactionId,
+      ),
     );
   }
   return (
