@@ -2,8 +2,8 @@ import { Trash2 } from "lucide-react";
 import { Transaction } from "../types";
 
 interface TransactionListProps {
-  transactionList: Transaction;
-  handleDelete: () => void;
+  transactionList: Transaction[];
+  handleDelete: (transactionId: number) => void;
 }
 
 const TransactionList = ({

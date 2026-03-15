@@ -2,12 +2,18 @@ import { useState, useEffect } from "react";
 import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 import { autoCategorizeDescription } from "../services/apiCall";
+import { Transaction } from "../types";
 
+interface TransactionProps {
+  transactionList: Transaction[];
+  setTransactionList: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  handleDelete: (transactionId: number) => void;
+}
 const Transactions = ({
   transactionList,
   setTransactionList,
   handleDelete,
-}) => {
+}: TransactionProps) => {
   const [transactionData, setTransactionData] = useState({
     type: "expense",
     amount: "",
@@ -65,11 +71,11 @@ const Transactions = ({
         transactionData.description,
         categoryType,
       );
-
-      setTransactionData({ ...transactionData, category: aiCategorize });
-      return aiCategorize;
+      if (aiCategorize) {
+        setTransactionData({ ...transactionData, category: aiCategorize });
+      }
     } catch (error) {
-      alert("Failed to categorize. Please try again later.", error);
+      alert("Failed to categorize. Please try again later.");
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +86,6 @@ const Transactions = ({
       <h1>Transactions</h1>
       <TransactionForm
         isLoading={isLoading}
-        lastCallTime={lastCallTime}
         transactionList={transactionList}
         setTransactionList={setTransactionList}
         transactionData={transactionData}
