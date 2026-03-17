@@ -1,5 +1,16 @@
 import { useState } from "react";
+import { Transaction, TransactionData, FormErrors } from "../types";
 
+interface TransactionFormProps {
+  transactionList: Transaction[];
+  setTransactionList: React.Dispatch<React.SetStateAction<Transaction[]>>;
+  transactionData: TransactionData;
+  setTransactionData: React.Dispatch<React.SetStateAction<TransactionData>>;
+  isLoading: boolean;
+  handleAutoCategorize: () => void;
+  incomeCategory: string[];
+  expenseCategory: string[];
+}
 const TransactionForm = ({
   transactionList,
   setTransactionList,
@@ -9,11 +20,11 @@ const TransactionForm = ({
   handleAutoCategorize,
   incomeCategory,
   expenseCategory,
-}) => {
-  const [errors, setErrors] = useState({});
+}: TransactionFormProps) => {
+  const [errors, setErrors] = useState<FormErrors>({});
 
   function validateForm() {
-    const newErrors = {};
+    const newErrors: FormErrors = {};
 
     if (!transactionData.amount) {
       newErrors.amount = "Amount is required";
@@ -27,7 +38,7 @@ const TransactionForm = ({
 
     return newErrors;
   }
-  function handleSubmit(e) {
+  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const validationErrors = validateForm();
 
@@ -39,6 +50,7 @@ const TransactionForm = ({
     setErrors({});
     const newTransactions = {
       ...transactionData,
+      amount: parseFloat(transactionData.amount),
       id: Date.now(),
     };
 

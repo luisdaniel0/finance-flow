@@ -13,3 +13,16 @@ export interface Budget {
   amount: number;
   category: string;
 }
+
+export interface TransactionData {
+  type: string;
+  amount: string;
+  description: string;
+  category: string;
+  date: string;
+}
+
+export interface FormErrors {
+  amount?: string;
+  description?: string;
+}
