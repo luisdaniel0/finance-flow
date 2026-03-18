@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import { Budget } from "../types";
 
-const BudgetList = ({ budget, budgetCalculation }) => {
+interface BudgetListProps {
+  budget: Budget;
+  budgetCalculation: number;
+}
+const BudgetList = ({ budget, budgetCalculation }: BudgetListProps) => {
   const progressPercentage = (budgetCalculation / budget.amount) * 100;
 
   return (

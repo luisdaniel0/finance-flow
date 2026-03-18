@@ -1,8 +1,15 @@
 import { useEffect } from "react";
 import BudgetForm from "../components/BudgetForm";
 import BudgetList from "../components/BudgetList";
+import { Budget, Transaction } from "../types";
 
-const Budgets = ({ transactionList, budgets, setBudgets }) => {
+interface BudgetsProps {
+  transactionList: Transaction[];
+  budgets: Budget[];
+  setBudgets: React.Dispatch<React.SetStateAction<Budget[]>>;
+}
+
+const Budgets = ({ transactionList, budgets, setBudgets }: BudgetsProps) => {
   useEffect(() => {
     localStorage.setItem("budgets", JSON.stringify(budgets));
   }, [budgets]);
@@ -17,11 +24,11 @@ const Budgets = ({ transactionList, budgets, setBudgets }) => {
     "Other",
   ];
 
-  function addBudget(newBudget) {
+  function addBudget(newBudget: Budget) {
     setBudgets([...budgets, newBudget]);
   }
 
-  function handleDelete(budgetId) {
+  function handleDelete(budgetId: number) {
     setBudgets(budgets.filter((budget) => budget.id !== budgetId));
   }
 
@@ -36,14 +43,13 @@ const Budgets = ({ transactionList, budgets, setBudgets }) => {
               return tran.category === budget.category;
             })
             .reduce((sum, transaction) => {
-              return sum + parseFloat(transaction.amount);
+              return sum + transaction.amount;
             }, 0);
           return (
             <BudgetList
               key={budget.id}
               budget={budget}
               budgetCalculation={budgetCalculation}
-              handleDelete={handleDelete}
             />
           );
         })}

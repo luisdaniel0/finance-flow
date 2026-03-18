@@ -13,7 +13,7 @@ function App() {
   const [transactionList, setTransactionList] = useState<Transaction[]>(
     JSON.parse(localStorage.getItem("transactions") || "[]"),
   );
-  const [budgets, setBudgets] = useState<Budget>(
+  const [budgets, setBudgets] = useState<Budget[]>(
     JSON.parse(localStorage.getItem("budgets") || "[]"),
   );
   function handleDelete(transactionId: number) {
