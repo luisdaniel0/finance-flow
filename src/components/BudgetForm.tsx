@@ -1,21 +1,27 @@
 import { useRef, useState } from "react";
+import { Budget } from "../types";
 
-const BudgetForm = ({ addBudget, budgetCategories }) => {
+interface BudgetFormProps {
+  addBudget: (newBudget: Budget) => void;
+  budgetCategories: string[];
+}
+
+const BudgetForm = ({ addBudget, budgetCategories }: BudgetFormProps) => {
   const [formData, setFormData] = useState({
     budgetName: "",
     budgetAmount: "",
     category: "Groceries",
   });
-  const dialogRef = useRef(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   function onClose() {
-    dialogRef.current.close();
+    dialogRef.current?.close();
   }
 
   function onOpen() {
-    dialogRef.current.showModal();
+    dialogRef.current?.showModal();
   }
-  function createBudget(e) {
+  function createBudget(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const newBudget = {
       id: Date.now(),
@@ -32,7 +38,7 @@ const BudgetForm = ({ addBudget, budgetCategories }) => {
       category: "Groceries",
     });
 
-    dialogRef.current.close();
+    dialogRef.current?.close();
   }
   return (
     <>
