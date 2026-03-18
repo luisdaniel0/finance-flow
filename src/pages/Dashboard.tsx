@@ -3,8 +3,16 @@ import { BanknoteArrowUp } from "lucide-react";
 import { BanknoteArrowDown } from "lucide-react";
 import { WalletCards } from "lucide-react";
 import { Cell, Pie, PieChart, Tooltip, Legend } from "recharts";
+import { Transaction } from "../types";
 
-const Dashboard = ({ transactionList }) => {
+interface DashboardProps {
+  transactionList: Transaction[];
+}
+
+interface CategoryAmounts {
+  [key: string]: number;
+}
+const Dashboard = ({ transactionList }: DashboardProps) => {
   const currentDate = new Date();
   const currentDateMonth = currentDate.getMonth();
   const currentDateYear = currentDate.getFullYear();
@@ -31,7 +39,7 @@ const Dashboard = ({ transactionList }) => {
 
   function sumOfIncome() {
     const total = income.reduce(
-      (sum, transaction) => sum + parseFloat(transaction.amount),
+      (sum, transaction) => sum + transaction.amount,
       0,
     );
     return total;
@@ -39,7 +47,7 @@ const Dashboard = ({ transactionList }) => {
 
   function sumOfExpense() {
     const total = expense.reduce(
-      (sum, transaction) => sum + parseFloat(transaction.amount),
+      (sum, transaction) => sum + transaction.amount,
       0,
     );
     return total;
@@ -51,17 +59,20 @@ const Dashboard = ({ transactionList }) => {
 
   //come back to this and make sure u understand what this reduce method is doing and how it works with objects
   // Group expenses by category and sum their amounts
-  const categoryTotals = expense.reduce((totals, transaction) => {
-    if (totals[transaction.category]) {
-      // Category exists - add to existing total
-      totals[transaction.category] =
-        totals[transaction.category] + parseFloat(transaction.amount);
-    } else {
-      // Category doesn't exist - create it with this amount
-      totals[transaction.category] = parseFloat(transaction.amount);
-    }
-    return totals;
-  }, {});
+  const categoryTotals = expense.reduce(
+    (totals: CategoryAmounts, transaction) => {
+      if (totals[transaction.category]) {
+        // Category exists - add to existing total
+        totals[transaction.category] =
+          totals[transaction.category] + transaction.amount;
+      } else {
+        // Category doesn't exist - create it with this amount
+        totals[transaction.category] = transaction.amount;
+      }
+      return totals;
+    },
+    {},
+  );
 
   // Convert object to array format for Recharts
   const chartData = Object.entries(categoryTotals).map(
