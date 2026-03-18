@@ -4,13 +4,20 @@ import { SquarePen } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Save, ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { Budget, Transaction } from "../types";
 
+interface BudgetDetailProps {
+  transactionList: Transaction[];
+  budgets: Budget[];
+  setBudgets: React.Dispatch<React.SetStateAction<Budget[]>>;
+  handleDelete: (transactionId: number) => void;
+}
 const BudgetDetail = ({
   transactionList,
   budgets,
   setBudgets,
   handleDelete,
-}) => {
+}: BudgetDetailProps) => {
   const [editing, setEditing] = useState(false);
   const { id } = useParams();
   const expenseCategory = [
@@ -22,7 +29,14 @@ const BudgetDetail = ({
     "Healthcare",
     "Other",
   ];
-  const budget = budgets.find((tran) => tran.id === Number(id));
+  const budget: Budget | undefined = budgets.find(
+    (tran) => tran.id === Number(id),
+  );
+
+  if (!budget) {
+    return <h2>Budget not found</h2>;
+  }
+
   const recentTransactions = transactionList.filter(
     (transaction) => transaction.category === budget.category,
   );
@@ -32,12 +46,12 @@ const BudgetDetail = ({
       return tran.category === budget.category;
     })
     .reduce((sum, transaction) => {
-      return sum + parseFloat(transaction.amount);
+      return sum + transaction.amount;
     }, 0);
 
   const progressPercentage = (budgetCalculation / budget.amount) * 100;
 
-  function deleteBudget(budgetId) {
+  function deleteBudget(budgetId: number) {
     setBudgets(budgets.filter((budget) => budget.id !== budgetId));
   }
 
@@ -45,10 +59,13 @@ const BudgetDetail = ({
     setEditing(true);
   }
 
-  function editBudget(e, inputField) {
+  function editBudget(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    inputField: string,
+  ) {
     setBudgets(
       budgets.map((b) => {
-        if (b.id === budget.id) {
+        if (b.id === budget?.id) {
           return { ...b, [inputField]: e.target.value };
         } else {
           return b;
@@ -75,7 +92,9 @@ const BudgetDetail = ({
                     className="text-lg font-bold"
                     type="text"
                     value={budget.name}
-                    onChange={(e) => editBudget(e, "name")}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      editBudget(e, "name")
+                    }
                   />
                 )}
 
