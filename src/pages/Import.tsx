@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import { categorizeImportedTransactions } from "../services/apiCall";
+import { Transaction } from "../types";
 
 //EDGE CASE:
 //have to figure out how to parse only 31 days from today's date, maybe ask AI? right now
@@ -8,8 +9,19 @@ import { categorizeImportedTransactions } from "../services/apiCall";
 
 //TODO: study and make sure to fully understand everything that is happening in this code. there is a lot to digest, and half of it was claude
 
-const Imports = ({ transactionList, setTransactionList }) => {
-  const [previewData, setPreviewData] = useState([]);
+interface ImportProps {
+  transactionList: Transaction[];
+  setTransactionList: React.Dispatch<React.SetStateAction<Transaction[]>>;
+}
+
+interface CSVRow {
+  Description: string;
+  Amount: string;
+  "Posting Date": string;
+}
+
+const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
+  const [previewData, setPreviewData] = useState<CSVRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const allCategories = [
@@ -29,11 +41,15 @@ const Imports = ({ transactionList, setTransactionList }) => {
     "Other",
   ];
 
-  function parseCSV(e) {
+  function parseCSV(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files === null) {
+      return;
+    }
     const file = e.target.files[0];
-    Papa.parse(file, {
+    Papa.parse<CSVRow>(file, {
       header: true,
       complete: function (results) {
+        console.log(results);
         setPreviewData(results.data);
       },
     });
@@ -52,7 +68,14 @@ const Imports = ({ transactionList, setTransactionList }) => {
     );
   });
 
-  async function categorizeTransactions(transaction) {
+  async function categorizeTransactions(transaction: {
+    type: string;
+    amount: number;
+    date: string;
+    description: string;
+    id: number;
+    category: string;
+  }) {
     try {
       const categorize = await categorizeImportedTransactions(
         transaction,
@@ -64,9 +87,10 @@ const Imports = ({ transactionList, setTransactionList }) => {
       return "Other";
     }
   }
-  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
-  async function transformCSVData(csv) {
+  async function transformCSVData(csv: CSVRow[]) {
     setIsLoading(true);
     const transformed = csv.map((element, index) => {
       return {
@@ -82,7 +106,7 @@ const Imports = ({ transactionList, setTransactionList }) => {
 
     for (const transaction of transformed) {
       const api = await categorizeTransactions(transaction);
-      const newObj = { ...transaction, category: api };
+      const newObj = { ...transaction, category: api || "Other" };
       results.push(newObj);
       await delay(6000);
     }
