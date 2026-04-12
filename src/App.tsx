@@ -6,8 +6,8 @@ import Budgets from "./pages/Budgets";
 import Import from "./pages/Import";
 import { useState } from "react";
 import BudgetDetail from "./pages/BudgetDetails";
-
 import { Transaction, Budget } from "./types";
+import Login from "./pages/Login";
 
 function App() {
   const [transactionList, setTransactionList] = useState<Transaction[]>(
@@ -16,6 +16,7 @@ function App() {
   const [budgets, setBudgets] = useState<Budget[]>(
     JSON.parse(localStorage.getItem("budgets") || "[]"),
   );
+
   function handleDelete(transactionId: number) {
     setTransactionList(
       transactionList.filter(
@@ -23,57 +24,65 @@ function App() {
       ),
     );
   }
-  return (
-    <div className="flex">
-      <Navbar />
 
-      <Routes>
-        <Route
-          path="/"
-          element={<Dashboard transactionList={transactionList} />}
-        />
-        <Route
-          path="/transactions"
-          element={
-            <Transactions
-              transactionList={transactionList}
-              setTransactionList={setTransactionList}
-              handleDelete={handleDelete}
-            />
-          }
-        />
-        <Route
-          path="/budgets"
-          element={
-            <Budgets
-              transactionList={transactionList}
-              budgets={budgets}
-              setBudgets={setBudgets}
-            />
-          }
-        />
-        <Route
-          path="/budgets/:id"
-          element={
-            <BudgetDetail
-              transactionList={transactionList}
-              budgets={budgets}
-              setBudgets={setBudgets}
-              handleDelete={handleDelete}
-            />
-          }
-        />
-        <Route
-          path="/import"
-          element={
-            <Import
-              transactionList={transactionList}
-              setTransactionList={setTransactionList}
-            />
-          }
-        />
-      </Routes>
-    </div>
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route
+        path="*"
+        element={
+          <div className="flex">
+            <Navbar />
+            <Routes>
+              <Route
+                path="/"
+                element={<Dashboard transactionList={transactionList} />}
+              />
+              <Route
+                path="/transactions"
+                element={
+                  <Transactions
+                    transactionList={transactionList}
+                    setTransactionList={setTransactionList}
+                    handleDelete={handleDelete}
+                  />
+                }
+              />
+              <Route
+                path="/budgets"
+                element={
+                  <Budgets
+                    transactionList={transactionList}
+                    budgets={budgets}
+                    setBudgets={setBudgets}
+                  />
+                }
+              />
+              <Route
+                path="/budgets/:id"
+                element={
+                  <BudgetDetail
+                    transactionList={transactionList}
+                    budgets={budgets}
+                    setBudgets={setBudgets}
+                    handleDelete={handleDelete}
+                  />
+                }
+              />
+              <Route
+                path="/import"
+                element={
+                  <Import
+                    transactionList={transactionList}
+                    setTransactionList={setTransactionList}
+                  />
+                }
+              />
+            </Routes>
+          </div>
+        }
+      />
+    </Routes>
   );
 }
 
