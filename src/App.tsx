@@ -8,6 +8,7 @@ import { useState } from "react";
 import BudgetDetail from "./pages/BudgetDetails";
 import { Transaction, Budget } from "./types";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 function App() {
   const [transactionList, setTransactionList] = useState<Transaction[]>(
@@ -28,6 +29,7 @@ function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route
         path="*"
         element={
