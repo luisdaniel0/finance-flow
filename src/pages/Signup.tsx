@@ -22,7 +22,13 @@ const Signup = ({ onLogin }: SignupProps) => {
       onLogin();
       navigate("/");
     } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
+      if (err instanceof Error) {
+        setError(
+          err.message === "Failed to fetch"
+            ? "Unable to reach the server. Please try again later."
+            : err.message
+        );
+      }
     }
   };
 
