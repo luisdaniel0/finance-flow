@@ -20,11 +20,27 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  function fetchData() {
+    setIsLoading(true);
+    setFetchError(null);
+    Promise.all([getTransactions(), getBudgets()])
+      .then(([transactions, fetchedBudgets]) => {
+        setTransactionList(transactions);
+        setBudgets(fetchedBudgets);
+      })
+      .catch((err: unknown) => {
+        const message = err instanceof Error ? err.message : "Unknown error";
+        setFetchError(message);
+      })
+      .finally(() => setIsLoading(false));
+  }
 
   useEffect(() => {
     if (!isLoggedIn) return;
-    getTransactions().then(setTransactionList).catch(console.error);
-    getBudgets().then(setBudgets).catch(console.error);
+    fetchData();
   }, [isLoggedIn]);
 
   async function handleDelete(transactionId: number) {
@@ -59,6 +75,22 @@ function App() {
         element={
           <div className="flex">
             <Navbar onLogout={handleLogout} />
+            {isLoading ? (
+              <div className="flex flex-1 items-center justify-center h-screen">
+                <div className="w-10 h-10 border-4 border-[#646cff] border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : fetchError ? (
+              <div className="flex flex-1 flex-col items-center justify-center h-screen gap-4">
+                <p className="text-red-400 text-lg font-semibold">Could not reach the server</p>
+                <p className="text-gray-400 text-sm">{fetchError}</p>
+                <button
+                  className="py-2 px-4 rounded-lg bg-[#646cff] cursor-pointer"
+                  onClick={fetchData}
+                >
+                  Retry
+                </button>
+              </div>
+            ) : (
             <Routes>
               <Route
                 path="/"
@@ -105,6 +137,7 @@ function App() {
                 }
               />
             </Routes>
+            )}
           </div>
         }
       />
