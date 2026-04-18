@@ -25,7 +25,10 @@ const handleResponse = async (response: Response): Promise<Response> => {
   }
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new Error(error.detail ?? "Request failed");
+    const detail = Array.isArray(error.detail)
+      ? JSON.stringify(error.detail)
+      : (error.detail ?? "Request failed");
+    throw new Error(detail);
   }
   return response;
 };

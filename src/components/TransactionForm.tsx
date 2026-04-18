@@ -57,6 +57,7 @@ const TransactionForm = ({
       category: transactionData.category,
       type: transactionData.type,
       date: transactionData.date,
+      description: transactionData.description,
     });
 
     setTransactionList([...transactionList, created]);
