@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { signup } from "../services/api";
+import { signup, login } from "../services/api";
 
-const Signup = () => {
+interface SignupProps {
+  onLogin: () => void;
+}
+
+const Signup = ({ onLogin }: SignupProps) => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +18,9 @@ const Signup = () => {
     setError("");
     try {
       await signup(username, password, email);
-      navigate("/login");
+      await login(username, password);
+      onLogin();
+      navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
     }

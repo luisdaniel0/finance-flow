@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../services/api";
 
-const Login = () => {
+interface LoginProps {
+  onLogin: () => void;
+}
+
+const Login = ({ onLogin }: LoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,6 +17,7 @@ const Login = () => {
     setError("");
     try {
       await login(username, password);
+      onLogin();
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);

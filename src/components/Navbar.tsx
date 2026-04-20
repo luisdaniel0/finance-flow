@@ -2,11 +2,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { LayoutDashboard, CreditCard, PiggyBank, FileUp, LogOut } from "lucide-react";
 import { clearToken } from "../services/api";
 
-const Navbar = () => {
+interface NavbarProps {
+  onLogout: () => void;
+}
+
+const Navbar = ({ onLogout }: NavbarProps) => {
   const navigate = useNavigate();
 
   function handleLogout() {
     clearToken();
+    onLogout();
     navigate("/login");
   }
 

@@ -17,9 +17,9 @@ import {
 } from "./services/api";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(!!getToken());
   const [transactionList, setTransactionList] = useState<Transaction[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
-  const isLoggedIn = !!getToken();
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -32,11 +32,19 @@ function App() {
     setTransactionList((prev) => prev.filter((t) => t.id !== transactionId));
   }
 
+  function handleLogin() {
+    setIsLoggedIn(true);
+  }
+
+  function handleLogout() {
+    setIsLoggedIn(false);
+  }
+
   if (!isLoggedIn) {
     return (
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/signup" element={<Signup onLogin={handleLogin} />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     );
@@ -50,7 +58,7 @@ function App() {
         path="*"
         element={
           <div className="flex">
-            <Navbar />
+            <Navbar onLogout={handleLogout} />
             <Routes>
               <Route
                 path="/"
