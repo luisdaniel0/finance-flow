@@ -1,35 +1,51 @@
 import Navbar from "./components/Navbar";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Budgets from "./pages/Budgets";
 import Import from "./pages/Import";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BudgetDetail from "./pages/BudgetDetails";
-import { Transaction, Budget } from "./types";
+import type { Transaction, Budget } from "./types";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import {
+  getToken,
+  getTransactions,
+  getBudgets,
+  deleteTransaction,
+} from "./services/api";
 
 function App() {
-  const [transactionList, setTransactionList] = useState<Transaction[]>(
-    JSON.parse(localStorage.getItem("transactions") || "[]"),
-  );
-  const [budgets, setBudgets] = useState<Budget[]>(
-    JSON.parse(localStorage.getItem("budgets") || "[]"),
-  );
+  const [transactionList, setTransactionList] = useState<Transaction[]>([]);
+  const [budgets, setBudgets] = useState<Budget[]>([]);
+  const isLoggedIn = !!getToken();
 
-  function handleDelete(transactionId: number) {
-    setTransactionList(
-      transactionList.filter(
-        (transaction: Transaction) => transaction.id !== transactionId,
-      ),
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    getTransactions().then(setTransactionList).catch(console.error);
+    getBudgets().then(setBudgets).catch(console.error);
+  }, [isLoggedIn]);
+
+  async function handleDelete(transactionId: number) {
+    await deleteTransaction(transactionId);
+    setTransactionList((prev) => prev.filter((t) => t.id !== transactionId));
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
     );
   }
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/signup" element={<Navigate to="/" replace />} />
       <Route
         path="*"
         element={
