@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import BudgetForm from "../components/BudgetForm";
 import BudgetList from "../components/BudgetList";
-import { Budget, Transaction } from "../types";
+import type { Budget, Transaction } from "../types";
+import { createBudget } from "../services/api";
 
 interface BudgetsProps {
   transactionList: Transaction[];
@@ -10,10 +10,6 @@ interface BudgetsProps {
 }
 
 const Budgets = ({ transactionList, budgets, setBudgets }: BudgetsProps) => {
-  useEffect(() => {
-    localStorage.setItem("budgets", JSON.stringify(budgets));
-  }, [budgets]);
-
   const budgetCategories = [
     "Groceries",
     "Transportation",
@@ -24,27 +20,20 @@ const Budgets = ({ transactionList, budgets, setBudgets }: BudgetsProps) => {
     "Other",
   ];
 
-  function addBudget(newBudget: Budget) {
-    setBudgets([...budgets, newBudget]);
-  }
-
-  function handleDelete(budgetId: number) {
-    setBudgets(budgets.filter((budget) => budget.id !== budgetId));
+  async function addBudget(name: string, amount: number, category: string) {
+    const created = await createBudget({ name, amount, category });
+    setBudgets([...budgets, created]);
   }
 
   return (
     <div className="w-full m-8 p-8">
       <h1 className="">My Budgets</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 gap-10 ">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 gap-10">
         <BudgetForm addBudget={addBudget} budgetCategories={budgetCategories} />
         {budgets.map((budget) => {
           const budgetCalculation = transactionList
-            .filter((tran) => {
-              return tran.category === budget.category;
-            })
-            .reduce((sum, transaction) => {
-              return sum + transaction.amount;
-            }, 0);
+            .filter((tran) => tran.category === budget.category)
+            .reduce((sum, transaction) => sum + transaction.amount, 0);
           return (
             <BudgetList
               key={budget.id}

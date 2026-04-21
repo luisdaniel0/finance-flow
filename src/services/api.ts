@@ -16,11 +16,25 @@ const authHeaders = (): Record<string, string> => ({
   Authorization: `Bearer ${getToken()}`,
 });
 
+// Centralized response handler — redirects to /login on 401
+const handleResponse = async (response: Response): Promise<Response> => {
+  if (response.status === 401) {
+    clearToken();
+    window.location.href = "/login";
+    throw new Error("Session expired");
+  }
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.detail ?? "Request failed");
+  }
+  return response;
+};
+
 // ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export const login = async (
   username: string,
-  password: string
+  password: string,
 ): Promise<void> => {
   const response = await fetch(`${BASE_URL}/users/login`, {
     method: "POST",
@@ -41,7 +55,7 @@ export const login = async (
 export const signup = async (
   username: string,
   password: string,
-  email: string
+  email: string,
 ): Promise<void> => {
   const response = await fetch(`${BASE_URL}/users/sign-up`, {
     method: "POST",
@@ -58,93 +72,89 @@ export const signup = async (
 // ─── Transactions ─────────────────────────────────────────────────────────────
 
 export const getTransactions = async (): Promise<Transaction[]> => {
-  const response = await fetch(`${BASE_URL}/transactions/`, {
-    headers: authHeaders(),
-  });
-
-  if (!response.ok) throw new Error("Failed to fetch transactions");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/transactions/`, { headers: authHeaders() }),
+  );
   return response.json();
 };
 
 export const createTransaction = async (
-  transaction: Omit<Transaction, "id">
+  transaction: Omit<Transaction, "id">,
 ): Promise<Transaction> => {
-  const response = await fetch(`${BASE_URL}/transactions/`, {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify(transaction),
-  });
-
-  if (!response.ok) throw new Error("Failed to create transaction");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/transactions/`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(transaction),
+    }),
+  );
   return response.json();
 };
 
 export const updateTransaction = async (
   id: number,
-  transaction: Omit<Transaction, "id">
+  transaction: Omit<Transaction, "id">,
 ): Promise<Transaction> => {
-  const response = await fetch(`${BASE_URL}/transactions/${id}`, {
-    method: "PUT",
-    headers: authHeaders(),
-    body: JSON.stringify(transaction),
-  });
-
-  if (!response.ok) throw new Error("Failed to update transaction");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/transactions/${id}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(transaction),
+    }),
+  );
   return response.json();
 };
 
 export const deleteTransaction = async (id: number): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/transactions/${id}`, {
-    method: "DELETE",
-    headers: authHeaders(),
-  });
-
-  if (!response.ok) throw new Error("Failed to delete transaction");
+  await handleResponse(
+    await fetch(`${BASE_URL}/transactions/${id}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    }),
+  );
 };
 
 // ─── Budgets ──────────────────────────────────────────────────────────────────
 
 export const getBudgets = async (): Promise<Budget[]> => {
-  const response = await fetch(`${BASE_URL}/budgets/`, {
-    headers: authHeaders(),
-  });
-
-  if (!response.ok) throw new Error("Failed to fetch budgets");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/budgets/`, { headers: authHeaders() }),
+  );
   return response.json();
 };
 
 export const createBudget = async (
-  budget: Omit<Budget, "id">
+  budget: Omit<Budget, "id">,
 ): Promise<Budget> => {
-  const response = await fetch(`${BASE_URL}/budgets/`, {
-    method: "POST",
-    headers: authHeaders(),
-    body: JSON.stringify(budget),
-  });
-
-  if (!response.ok) throw new Error("Failed to create budget");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/budgets/`, {
+      method: "POST",
+      headers: authHeaders(),
+      body: JSON.stringify(budget),
+    }),
+  );
   return response.json();
 };
 
 export const updateBudget = async (
   id: number,
-  budget: Omit<Budget, "id">
+  budget: Omit<Budget, "id">,
 ): Promise<Budget> => {
-  const response = await fetch(`${BASE_URL}/budgets/${id}`, {
-    method: "PUT",
-    headers: authHeaders(),
-    body: JSON.stringify(budget),
-  });
-
-  if (!response.ok) throw new Error("Failed to update budget");
+  const response = await handleResponse(
+    await fetch(`${BASE_URL}/budgets/${id}`, {
+      method: "PUT",
+      headers: authHeaders(),
+      body: JSON.stringify(budget),
+    }),
+  );
   return response.json();
 };
 
 export const deleteBudget = async (id: number): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/budgets/${id}`, {
-    method: "DELETE",
-    headers: authHeaders(),
-  });
-
-  if (!response.ok) throw new Error("Failed to delete budget");
+  await handleResponse(
+    await fetch(`${BASE_URL}/budgets/${id}`, {
+      method: "DELETE",
+      headers: authHeaders(),
+    }),
+  );
 };

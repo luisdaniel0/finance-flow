@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Transaction, TransactionData, FormErrors } from "../types";
+import type { Transaction, TransactionData, FormErrors } from "../types";
+import { createTransaction } from "../services/api";
 
 interface TransactionFormProps {
   transactionList: Transaction[];
@@ -11,6 +12,7 @@ interface TransactionFormProps {
   incomeCategory: string[];
   expenseCategory: string[];
 }
+
 const TransactionForm = ({
   transactionList,
   setTransactionList,
@@ -38,7 +40,8 @@ const TransactionForm = ({
 
     return newErrors;
   }
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+
+  async function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     const validationErrors = validateForm();
 
@@ -48,13 +51,15 @@ const TransactionForm = ({
     }
 
     setErrors({});
-    const newTransactions = {
-      ...transactionData,
-      amount: parseFloat(transactionData.amount),
-      id: Date.now(),
-    };
 
-    setTransactionList([...transactionList, newTransactions]);
+    const created = await createTransaction({
+      amount: parseFloat(transactionData.amount),
+      category: transactionData.category,
+      type: transactionData.type,
+      date: transactionData.date,
+    });
+
+    setTransactionList([...transactionList, created]);
 
     setTransactionData({
       type: "expense",
@@ -112,14 +117,8 @@ const TransactionForm = ({
             placeholder="0.00"
             className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
             onChange={(e) => {
-              setTransactionData({
-                ...transactionData,
-                amount: e.target.value,
-              });
-              // Clear the error for this field when user types
-              if (errors.amount) {
-                setErrors({ ...errors, amount: undefined });
-              }
+              setTransactionData({ ...transactionData, amount: e.target.value });
+              if (errors.amount) setErrors({ ...errors, amount: undefined });
             }}
             value={transactionData.amount}
           />
@@ -139,10 +138,8 @@ const TransactionForm = ({
                 ...transactionData,
                 description: e.target.value,
               });
-              // Clear the error for this field when user types
-              if (errors.description) {
+              if (errors.description)
                 setErrors({ ...errors, description: undefined });
-              }
             }}
             value={transactionData.description}
           />
@@ -192,7 +189,6 @@ const TransactionForm = ({
         </div>
         <div className="flex flex-col">
           <label>Date</label>
-
           <input
             name="date"
             type="date"
@@ -205,7 +201,7 @@ const TransactionForm = ({
         </div>
         <button
           type="submit"
-          className="py-2 px-4  rounded-lg cursor-pointer bg-[#646cff]"
+          className="py-2 px-4 rounded-lg cursor-pointer bg-[#646cff]"
         >
           Add Transaction
         </button>

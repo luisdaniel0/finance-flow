@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import TransactionForm from "../components/TransactionForm";
 import TransactionList from "../components/TransactionList";
 import { autoCategorizeDescription } from "../services/apiCall";
@@ -25,9 +25,6 @@ const Transactions = ({
   const [isLoading, setIsLoading] = useState(false);
   const [lastCallTime, setLastCallTime] = useState(0);
 
-  useEffect(() => {
-    localStorage.setItem("transactions", JSON.stringify(transactionList));
-  }, [transactionList]);
 
   const expenseCategory = [
     "Groceries",

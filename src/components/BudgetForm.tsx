@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
-import { Budget } from "../types";
 
 interface BudgetFormProps {
-  addBudget: (newBudget: Budget) => void;
+  addBudget: (name: string, amount: number, category: string) => Promise<void>;
   budgetCategories: string[];
 }
 
@@ -21,16 +20,14 @@ const BudgetForm = ({ addBudget, budgetCategories }: BudgetFormProps) => {
   function onOpen() {
     dialogRef.current?.showModal();
   }
-  function createBudget(e: React.SubmitEvent<HTMLFormElement>) {
+  async function createBudget(e: { preventDefault: () => void }) {
     e.preventDefault();
-    const newBudget = {
-      id: Date.now(),
-      name: formData.budgetName,
-      amount: parseFloat(formData.budgetAmount),
-      category: formData.category,
-    };
 
-    addBudget(newBudget);
+    await addBudget(
+      formData.budgetName,
+      parseFloat(formData.budgetAmount),
+      formData.category,
+    );
 
     setFormData({
       budgetName: "",

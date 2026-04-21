@@ -1,13 +1,14 @@
 import { useState } from "react";
 import Papa from "papaparse";
 import { categorizeImportedTransactions } from "../services/apiCall";
-import { Transaction } from "../types";
+import { createTransaction } from "../services/api";
+import type { Transaction } from "../types";
 
 //EDGE CASE:
 //have to figure out how to parse only 31 days from today's date, maybe ask AI? right now
 // its only returning data that matches the current date but what if its the 1st of the month?
 
-//TODO: study and make sure to fully understand everything that is happening in this code. there is a lot to digest, and half of it was claude
+//TODO: study and make sure to fully understand everything that is happening in this code.
 
 interface ImportProps {
   transactionList: Transaction[];
@@ -42,14 +43,11 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
   ];
 
   function parseCSV(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files === null) {
-      return;
-    }
+    if (e.target.files === null) return;
     const file = e.target.files[0];
     Papa.parse<CSVRow>(file, {
       header: true,
       complete: function (results) {
-        console.log(results);
         setPreviewData(results.data);
       },
     });
@@ -61,7 +59,6 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
 
   const parsedImport = previewData.filter((entry) => {
     const entryDate = new Date(entry["Posting Date"]);
-
     return (
       entryDate.getMonth() === currentDateMonth &&
       entryDate.getFullYear() === currentDateYear
@@ -73,12 +70,11 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
     amount: number;
     date: string;
     description: string;
-    id: number;
     category: string;
-  }) {
+  }): Promise<string> {
     try {
       const categorize = await categorizeImportedTransactions(
-        transaction,
+        transaction as Transaction,
         allCategories,
       );
       return categorize;
@@ -87,27 +83,33 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
       return "Other";
     }
   }
-  const delay = (ms: number) =>
+
+  const delay = (ms: number): Promise<void> =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
   async function transformCSVData(csv: CSVRow[]) {
     setIsLoading(true);
-    const transformed = csv.map((element, index) => {
-      return {
+    const results: Transaction[] = [];
+
+    for (const element of csv) {
+      const localData = {
         type: parseFloat(element.Amount) < 0 ? "expense" : "income",
         amount: Math.abs(parseFloat(element.Amount)),
         date: element["Posting Date"],
         description: element.Description,
-        id: Date.now() + index,
         category: "Other",
       };
-    });
-    const results = [];
 
-    for (const transaction of transformed) {
-      const api = await categorizeTransactions(transaction);
-      const newObj = { ...transaction, category: api || "Other" };
-      results.push(newObj);
+      const category = await categorizeTransactions(localData);
+
+      const created = await createTransaction({
+        type: localData.type,
+        amount: localData.amount,
+        date: localData.date,
+        category: category || "Other",
+      });
+
+      results.push(created);
       await delay(6000);
     }
 
@@ -129,9 +131,10 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
       </label>
       {previewData.length > 0 && (
         <>
-          <h1 className="m-7 text-center font-bold text-lg ">
-            Transaction Preview<br></br> (Showing 20 of {previewData.length}{" "}
-            transactions)
+          <h1 className="m-7 text-center font-bold text-lg">
+            Transaction Preview
+            <br />
+            (Showing 20 of {previewData.length} transactions)
           </h1>
           <div className="grid grid-cols-3 text-center border p-2 font-bold">
             <div>Name</div>
@@ -156,24 +159,27 @@ const Imports = ({ transactionList, setTransactionList }: ImportProps) => {
           </div>
         ))}
       </div>
+
       {previewData.length > 0 && (
-        <>
-          <div className="flex justify-center mt-10">
-            <button
-              className={`rounded-lg p-3 font-bold mr-10 ${isLoading ? "bg-gray-500 cursor-not-allowed" : "bg-regal-blue cursor-pointer"}`}
-              onClick={() => transformCSVData(parsedImport.slice(0, 4))}
-              disabled={isLoading}
-            >
-              {isLoading ? "Importing..." : "Import"}
-            </button>
-            <button
-              className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer"
-              onClick={() => setPreviewData([])}
-            >
-              Cancel
-            </button>
-          </div>
-        </>
+        <div className="flex justify-center mt-10">
+          <button
+            className={`rounded-lg p-3 font-bold mr-10 ${
+              isLoading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-regal-blue cursor-pointer"
+            }`}
+            onClick={() => transformCSVData(parsedImport.slice(0, 4))}
+            disabled={isLoading}
+          >
+            {isLoading ? "Importing..." : "Import"}
+          </button>
+          <button
+            className="rounded-lg p-3 bg-regal-blue font-bold cursor-pointer"
+            onClick={() => setPreviewData([])}
+          >
+            Cancel
+          </button>
+        </div>
       )}
     </div>
   );
