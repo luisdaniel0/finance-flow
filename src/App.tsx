@@ -73,7 +73,7 @@ function App() {
       <Route
         path="*"
         element={
-          <div className="flex">
+          <div className="flex h-screen overflow-hidden">
             <Navbar onLogout={handleLogout} />
             {isLoading ? (
               <div className="flex flex-1 items-center justify-center h-screen">

@@ -73,6 +73,7 @@ const TransactionForm = ({
 
   return (
     <>
+      <h2 className="text-base font-semibold text-white mb-4">Add Transaction</h2>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="flex gap-5 mt-5">
           <button
@@ -116,7 +117,7 @@ const TransactionForm = ({
             name="amount"
             type="number"
             placeholder="0.00"
-            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
+            className="bg-gray-700 text-white p-2.5 rounded-lg border border-gray-600 focus:border-[#646cff] outline-none text-sm mt-1 w-full"
             onChange={(e) => {
               setTransactionData({ ...transactionData, amount: e.target.value });
               if (errors.amount) setErrors({ ...errors, amount: undefined });
@@ -133,7 +134,7 @@ const TransactionForm = ({
             name="description"
             type="text"
             placeholder="e.g., Starbucks coffee"
-            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
+            className="bg-gray-700 text-white p-2.5 rounded-lg border border-gray-600 focus:border-[#646cff] outline-none text-sm mt-1 w-full"
             onChange={(e) => {
               setTransactionData({
                 ...transactionData,
@@ -154,7 +155,7 @@ const TransactionForm = ({
           <label>Category</label>
           <div className="flex">
             <select
-              className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
+              className="bg-gray-700 text-white p-2.5 rounded-lg border border-gray-600 focus:border-[#646cff] outline-none text-sm mt-1 w-full"
               name="category"
               onChange={(e) =>
                 setTransactionData({
@@ -197,7 +198,7 @@ const TransactionForm = ({
             onChange={(e) =>
               setTransactionData({ ...transactionData, date: e.target.value })
             }
-            className="bg-gray-600 text-white p-2 rounded mt-1 w-60"
+            className="bg-gray-700 text-white p-2.5 rounded-lg border border-gray-600 focus:border-[#646cff] outline-none text-sm mt-1 w-full"
           />
         </div>
         <button

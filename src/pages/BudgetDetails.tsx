@@ -31,12 +31,14 @@ const BudgetDetail = ({
     "Other",
   ];
 
-  const budget: Budget | undefined = budgets.find(
-    (b) => b.id === Number(id),
-  );
+  const budget: Budget | undefined = budgets.find((b) => b.id === Number(id));
 
   if (!budget) {
-    return <h2>Budget not found</h2>;
+    return (
+      <div className="flex-1 p-8 flex items-center justify-center">
+        <p className="text-gray-400">Budget not found.</p>
+      </div>
+    );
   }
 
   const currentBudget: Budget = budget;
@@ -53,6 +55,8 @@ const BudgetDetail = ({
     (budgetCalculation / budget.amount) * 100,
     100,
   );
+
+  const isOverBudget = budgetCalculation > budget.amount;
 
   function editBudget(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -81,125 +85,137 @@ const BudgetDetail = ({
   }
 
   return (
-    <>
-      <div className="w-full p-8 m-8">
-        <Link to="/budgets">
-          <button className="mb-10 cursor-pointer flex gap-3 items-center">
-            <ArrowLeft size={30} /> Back to Budgets
-          </button>
-        </Link>
-        <div className="grid grid-cols-2">
-          <div className="flex flex-col w-100 h-45 rounded-lg border p-5 justify-around">
-            <div className="flex justify-between">
-              <div>
-                {!editing ? (
-                  <p className="text-lg font-bold">{budget.name}</p>
-                ) : (
-                  <input
-                    className="text-lg font-bold"
-                    type="text"
-                    value={budget.name}
-                    onChange={(e) => editBudget(e, "name")}
-                  />
-                )}
+    <div className="flex-1 p-8 overflow-y-auto">
+      <Link
+        to="/budgets"
+        className="inline-flex items-center gap-2 text-gray-400 hover:text-white text-sm mb-8 transition-colors"
+      >
+        <ArrowLeft size={16} />
+        Back to Budgets
+      </Link>
 
-                {!editing ? (
-                  <p className="font-bold">{budget.category}</p>
-                ) : (
-                  <select
-                    className="bg-gray-600 text-white rounded mt-1 w-40"
-                    onChange={(e) => editBudget(e, "category")}
-                    value={budget.category}
-                  >
-                    {expenseCategory.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                )}
-              </div>
+      <div className="flex flex-col lg:flex-row gap-6 items-start">
+        <div className="bg-gray-800 rounded-xl border border-gray-700/50 p-6 w-full lg:w-96">
+          <div className="flex justify-between items-start mb-4">
+            <div>
               {!editing ? (
-                <p className="text-lg font-bold text-regal-blue">
-                  ${budget.amount}
-                </p>
+                <p className="text-lg font-bold text-white">{budget.name}</p>
               ) : (
                 <input
-                  className="flex text-end text-lg font-bold text-regal-blue w-full"
+                  className="text-lg font-bold bg-gray-700 text-white rounded px-2 py-1 w-40"
                   type="text"
-                  value={budget.amount}
-                  onChange={(e) => editBudget(e, "amount")}
+                  value={budget.name}
+                  onChange={(e) => editBudget(e, "name")}
                 />
               )}
+              {!editing ? (
+                <p className="text-sm text-gray-400 mt-1">{budget.category}</p>
+              ) : (
+                <select
+                  className="bg-gray-700 text-white rounded px-2 py-1 mt-1 text-sm"
+                  onChange={(e) => editBudget(e, "category")}
+                  value={budget.category}
+                >
+                  {expenseCategory.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
-            <div className="flex justify-between">
-              <span>${budgetCalculation} spent</span>
-              <span>${budget.amount - budgetCalculation} remaining</span>
-            </div>
-            <div className="h-2 w-full bg-gray-300 rounded-xl">
-              <div
-                style={{ width: `${progressPercentage}%` }}
-                className="h-full bg-[#646cff]"
-              ></div>
-            </div>
-          </div>
-          <div className="flex items-center gap-5">
-            {editing ? (
-              <button
-                className="flex gap-1 cursor-pointer p-4 rounded-lg bg-regal-blue"
-                onClick={handleSave}
-              >
-                <Save />
-                <span>Save</span>
-              </button>
+            {!editing ? (
+              <p className="text-xl font-bold text-[#646cff]">${budget.amount}</p>
             ) : (
-              <button
-                className="flex gap-1 cursor-pointer p-4 rounded-lg bg-regal-blue"
-                onClick={() => setEditing(true)}
-              >
-                <SquarePen />
-                <span>Edit</span>
-              </button>
+              <input
+                className="text-xl font-bold text-[#646cff] bg-gray-700 rounded px-2 py-1 w-28 text-right"
+                type="text"
+                value={budget.amount}
+                onChange={(e) => editBudget(e, "amount")}
+              />
             )}
+          </div>
 
-            <button
-              className="cursor-pointer flex gap-1 p-4 bg-red-600 rounded-lg"
-              onClick={() => handleDeleteBudget(budget.id)}
-            >
-              <Trash2 />
-              <span>Delete</span>
-            </button>
+          <div className="flex justify-between text-sm text-gray-400 mb-2">
+            <span>${budgetCalculation.toFixed(2)} spent</span>
+            <span className={isOverBudget ? "text-red-400" : "text-gray-400"}>
+              ${Math.abs(budget.amount - budgetCalculation).toFixed(2)}{" "}
+              {isOverBudget ? "over" : "remaining"}
+            </span>
+          </div>
+          <div className="h-2 w-full bg-gray-700 rounded-full overflow-hidden">
+            <div
+              style={{ width: `${progressPercentage}%` }}
+              className={`h-full rounded-full transition-all ${isOverBudget ? "bg-red-500" : "bg-[#646cff]"}`}
+            />
           </div>
         </div>
-        <h1 className="text-lg font-bold mt-12">
-          Latest {budget.category} Transactions
-        </h1>
-        <div className="grid grid-cols-4 mt-5 font-bold bg-gray-700 p-2">
-          <h1>Name</h1>
-          <h1>Amount</h1>
-          <h1>Date</h1>
-          <h1>Action</h1>
-        </div>
-        <div>
-          {recentTransactions.map((transaction) => (
-            <div
-              className="bg-gray-800 grid grid-cols-4 p-2"
-              key={transaction.id}
+
+        <div className="flex gap-3">
+          {editing ? (
+            <button
+              className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg bg-[#646cff] text-white text-sm font-medium"
+              onClick={handleSave}
             >
-              <span>{transaction.description}</span>
-              <span>{transaction.amount}</span>
-              <span>{transaction.date}</span>
-              <button
-                className="cursor-pointer"
-                onClick={() => handleDelete(transaction.id)}
-              >
-                <Trash2 />
-              </button>
-            </div>
-          ))}
+              <Save size={16} />
+              Save
+            </button>
+          ) : (
+            <button
+              className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium transition-colors"
+              onClick={() => setEditing(true)}
+            >
+              <SquarePen size={16} />
+              Edit
+            </button>
+          )}
+          <button
+            className="flex items-center gap-2 cursor-pointer px-4 py-2 rounded-lg bg-red-600 hover:bg-red-500 text-white text-sm font-medium transition-colors"
+            onClick={() => handleDeleteBudget(budget.id)}
+          >
+            <Trash2 size={16} />
+            Delete
+          </button>
         </div>
       </div>
-    </>
+
+      <div className="mt-10">
+        <h2 className="text-base font-semibold text-white mb-4">
+          {budget.category} Transactions
+        </h2>
+
+        {recentTransactions.length === 0 ? (
+          <p className="text-gray-400 text-sm">No transactions in this category yet.</p>
+        ) : (
+          <div className="bg-gray-800 rounded-xl border border-gray-700/50 overflow-hidden">
+            <div className="grid grid-cols-4 px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wide border-b border-gray-700">
+              <span>Description</span>
+              <span>Amount</span>
+              <span>Date</span>
+              <span></span>
+            </div>
+            {recentTransactions.map((transaction, i) => (
+              <div
+                key={transaction.id}
+                className={`grid grid-cols-4 px-4 py-3 items-center text-sm ${
+                  i % 2 === 0 ? "bg-gray-800" : "bg-gray-800/50"
+                } hover:bg-gray-700/50 transition-colors`}
+              >
+                <span className="text-white capitalize">{transaction.description}</span>
+                <span className="text-red-400 font-medium">${transaction.amount.toFixed(2)}</span>
+                <span className="text-gray-400">{transaction.date}</span>
+                <button
+                  className="cursor-pointer text-gray-500 hover:text-red-400 transition-colors justify-self-end"
+                  onClick={() => handleDelete(transaction.id)}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

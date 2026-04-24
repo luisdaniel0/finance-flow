@@ -26,7 +26,7 @@ const Signup = ({ onLogin }: SignupProps) => {
         setError(
           err.message === "Failed to fetch"
             ? "Unable to reach the server. Please try again later."
-            : err.message
+            : err.message,
         );
       }
     }
@@ -101,7 +101,7 @@ const Signup = ({ onLogin }: SignupProps) => {
           <button
             type="submit"
             className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm
-              font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2
+              font-semibold cursor-pointer text-white hover:bg-indigo-400 focus-visible:outline-2
               focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
           >
             Sign up

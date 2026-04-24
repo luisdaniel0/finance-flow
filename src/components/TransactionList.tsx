@@ -10,43 +10,52 @@ const TransactionList = ({
   transactionList,
   handleDelete,
 }: TransactionListProps) => {
-  return (
-    <>
-      <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-        {transactionList.map((tran) => (
-          <div className="bg-gray-800 p-6 rounded-lg mb-3 group" key={tran.id}>
-            <div className="flex justify-between items-center ">
-              <div className="flex flex-col">
-                <span className="text-xl text-gray-400">
-                  {tran.description.charAt(0).toUpperCase() +
-                    tran.description.slice(1).toLowerCase()}
-                </span>
-                <span className="font-semibold text-white">{tran.date}</span>
-                <span className="text-sm text-gray-500">{tran.category}</span>
-              </div>
+  if (transactionList.length === 0) {
+    return (
+      <p className="text-gray-500 text-sm mt-4">No transactions yet. Add one to get started.</p>
+    );
+  }
 
-              <div className="items-center">
-                <button
-                  className="px-3 py-0 rounded invisible group-hover:visible cursor-pointer"
-                  onClick={() => handleDelete(tran.id)}
-                >
-                  <Trash2 />
-                </button>
-                <span
-                  className={`font-bold text-xl ml-5 ${
-                    tran.type === "expense" ? "text-red-500" : "text-green-500"
-                  }`}
-                >
-                  {tran.type === "expense"
-                    ? "-$" + new Intl.NumberFormat().format(tran.amount)
-                    : "+$" + new Intl.NumberFormat().format(tran.amount)}
-                </span>
-              </div>
-            </div>
+  return (
+    <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+      {transactionList.map((tran) => (
+        <div
+          className="bg-gray-800 px-5 py-4 rounded-xl border border-gray-700/50 flex justify-between items-center group hover:border-gray-600 transition-colors"
+          key={tran.id}
+        >
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="text-white font-medium text-sm truncate">
+              {tran.description
+                ? tran.description.charAt(0).toUpperCase() +
+                  tran.description.slice(1).toLowerCase()
+                : "—"}
+            </span>
+            <span className="text-xs text-gray-500">{tran.date}</span>
+            <span className="text-xs text-gray-500">{tran.category}</span>
           </div>
-        ))}
-      </div>
-    </>
+
+          <div className="flex items-center gap-3 shrink-0 ml-4">
+            <button
+              className="invisible group-hover:visible cursor-pointer text-gray-500 hover:text-red-400 transition-colors"
+              onClick={() => handleDelete(tran.id)}
+            >
+              <Trash2 size={16} />
+            </button>
+            <span
+              className={`font-bold text-base ${
+                tran.type === "expense" ? "text-red-400" : "text-green-400"
+              }`}
+            >
+              {tran.type === "expense" ? "-" : "+"}$
+              {new Intl.NumberFormat("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              }).format(tran.amount)}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
   );
 };
 

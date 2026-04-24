@@ -26,9 +26,13 @@ const Budgets = ({ transactionList, budgets, setBudgets }: BudgetsProps) => {
   }
 
   return (
-    <div className="w-full m-8 p-8">
-      <h1 className="">My Budgets</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-8 gap-10">
+    <div className="flex-1 p-8 overflow-y-auto">
+      <h1 className="text-2xl font-bold text-white">My Budgets</h1>
+      <p className="text-gray-400 mt-1 text-sm mb-8">
+        Track and manage your spending limits.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <BudgetForm addBudget={addBudget} budgetCategories={budgetCategories} />
         {budgets.map((budget) => {
           const budgetCalculation = transactionList
